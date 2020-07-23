@@ -26,7 +26,6 @@ import com.ruoyi.framework.web.domain.AjaxResult;
 @RestController
 public class CaptchaController
 {
-
     @Resource(name = "captchaProducer")
     private Producer captchaProducer;
 
