@@ -8,7 +8,6 @@ import java.io.OutputStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -200,7 +199,10 @@ public class ExcelUtil<T>
                     // 设置类的私有字段属性可访问.
                     field.setAccessible(true);
                     Integer column = cellMap.get(attr.name());
-                    fieldsMap.put(column, field);
+                    if (column != null)
+                    {
+                        fieldsMap.put(column, field);
+                    }
                 }
             }
             for (int i = 1; i < rows; i++)
@@ -692,7 +694,7 @@ public class ExcelUtil<T>
         }
         return StringUtils.stripEnd(propertyString.toString(), separator);
     }
-    
+
     /**
      * 解析字典值
      * 
@@ -894,14 +896,7 @@ public class ExcelUtil<T>
                     }
                     else
                     {
-                        if ((Double) val % 1 > 0)
-                        {
-                            val = new DecimalFormat("0.00").format(val);
-                        }
-                        else
-                        {
-                            val = new DecimalFormat("0").format(val);
-                        }
+                        val = new BigDecimal(val.toString()); // 浮点格式处理
                     }
                 }
                 else if (cell.getCellTypeEnum() == CellType.STRING)
