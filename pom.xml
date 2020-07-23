@@ -31,6 +31,7 @@
 		<commons.fileupload.version>1.3.3</commons.fileupload.version>
 		<bitwalker.version>1.19</bitwalker.version>
 		<jwt.version>0.9.0</jwt.version>
+		<kaptcha.version>2.3.2</kaptcha.version>
 		<swagger.version>2.9.2</swagger.version>
 		<poi.version>3.17</poi.version>
 		<oshi.version>3.9.1</oshi.version>
@@ -243,6 +244,19 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
+		
+		<!--验证码 -->
+        <dependency>
+            <groupId>com.github.penggle</groupId>
+            <artifactId>kaptcha</artifactId>
+            <version>${kaptcha.version}</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>javax.servlet-api</artifactId>
+                    <groupId>javax.servlet</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
 
 	</dependencies>
 
