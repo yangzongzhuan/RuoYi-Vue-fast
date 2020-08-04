@@ -14,14 +14,20 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.ruoyi.common.constant.UserConstants;
 import com.ruoyi.common.utils.SecurityUtils;
+import com.ruoyi.common.utils.ServletUtils;
+import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.framework.aspectj.lang.annotation.Log;
 import com.ruoyi.framework.aspectj.lang.enums.BusinessType;
+import com.ruoyi.framework.security.LoginUser;
+import com.ruoyi.framework.security.service.SysPermissionService;
+import com.ruoyi.framework.security.service.TokenService;
 import com.ruoyi.framework.web.controller.BaseController;
 import com.ruoyi.framework.web.domain.AjaxResult;
 import com.ruoyi.framework.web.page.TableDataInfo;
 import com.ruoyi.project.system.domain.SysRole;
 import com.ruoyi.project.system.service.ISysRoleService;
+import com.ruoyi.project.system.service.ISysUserService;
 
 /**
  * 角色信息
@@ -34,6 +40,15 @@ public class SysRoleController extends BaseController
 {
     @Autowired
     private ISysRoleService roleService;
+
+    @Autowired
+    private TokenService tokenService;
+    
+    @Autowired
+    private SysPermissionService permissionService;
+    
+    @Autowired
+    private ISysUserService userService;
 
     @PreAuthorize("@ss.hasPermi('system:role:list')")
     @GetMapping("/list")
@@ -103,7 +118,20 @@ public class SysRoleController extends BaseController
             return AjaxResult.error("修改角色'" + role.getRoleName() + "'失败，角色权限已存在");
         }
         role.setUpdateBy(SecurityUtils.getUsername());
-        return toAjax(roleService.updateRole(role));
+        
+        if (roleService.updateRole(role) > 0)
+        {
+            // 更新缓存用户权限
+            LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
+            if (StringUtils.isNotNull(loginUser.getUser()) && !loginUser.getUser().isAdmin())
+            {
+                loginUser.setPermissions(permissionService.getMenuPermission(loginUser.getUser()));
+                loginUser.setUser(userService.selectUserByUserName(loginUser.getUser().getUserName()));
+                tokenService.setLoginUser(loginUser);
+            }
+            return AjaxResult.success();
+        }
+        return AjaxResult.error("修改角色'" + role.getRoleName() + "'失败，请联系管理员");
     }
 
     /**
