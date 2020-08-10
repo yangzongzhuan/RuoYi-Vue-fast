@@ -53,8 +53,7 @@ public class SameUrlDataInterceptor extends RepeatSubmitInterceptor
     public boolean isRepeatSubmit(HttpServletRequest request)
     {
         String nowParams = "";
-        if (request instanceof HttpServletRequest && StringUtils.equalsAnyIgnoreCase(request.getContentType(),
-                MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_JSON_UTF8_VALUE))
+        if (request instanceof RepeatedlyRequestWrapper)
         {
             RepeatedlyRequestWrapper repeatedlyRequest = (RepeatedlyRequestWrapper) request;
             nowParams = HttpHelper.getBodyString(repeatedlyRequest);
