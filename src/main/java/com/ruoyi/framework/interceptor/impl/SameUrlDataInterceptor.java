@@ -6,7 +6,6 @@ import java.util.concurrent.TimeUnit;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import com.alibaba.fastjson.JSONObject;
 import com.ruoyi.common.constant.Constants;
@@ -70,9 +69,16 @@ public class SameUrlDataInterceptor extends RepeatSubmitInterceptor
 
         // 请求地址（作为存放cache的key值）
         String url = request.getRequestURI();
+        
+        // 唯一值（没有消息头则使用请求地址）
+        String submitKey = request.getHeader(header);
+        if (StringUtils.isEmpty(submitKey))
+        {
+            submitKey = url;
+        }
 
         // 唯一标识（指定key + 消息头）
-        String cache_repeat_key = Constants.REPEAT_SUBMIT_KEY + request.getHeader(header);
+        String cache_repeat_key = Constants.REPEAT_SUBMIT_KEY + submitKey;
 
         Object sessionObj = redisCache.getCacheObject(cache_repeat_key);
         if (sessionObj != null)
