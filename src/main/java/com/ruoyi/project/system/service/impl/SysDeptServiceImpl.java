@@ -12,7 +12,9 @@ import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.framework.aspectj.lang.annotation.DataScope;
 import com.ruoyi.framework.web.domain.TreeSelect;
 import com.ruoyi.project.system.domain.SysDept;
+import com.ruoyi.project.system.domain.SysRole;
 import com.ruoyi.project.system.mapper.SysDeptMapper;
+import com.ruoyi.project.system.mapper.SysRoleMapper;
 import com.ruoyi.project.system.service.ISysDeptService;
 
 /**
@@ -25,6 +27,9 @@ public class SysDeptServiceImpl implements ISysDeptService
 {
     @Autowired
     private SysDeptMapper deptMapper;
+    
+    @Autowired
+    private SysRoleMapper roleMapper;
 
     /**
      * 查询部门管理数据
@@ -93,7 +98,8 @@ public class SysDeptServiceImpl implements ISysDeptService
     @Override
     public List<Integer> selectDeptListByRoleId(Long roleId)
     {
-        return deptMapper.selectDeptListByRoleId(roleId);
+        SysRole role = roleMapper.selectRoleById(roleId);
+        return deptMapper.selectDeptListByRoleId(roleId, role.isDeptCheckStrictly());
     }
 
     /**

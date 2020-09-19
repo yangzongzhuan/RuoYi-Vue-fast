@@ -15,10 +15,12 @@ import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.framework.web.domain.TreeSelect;
 import com.ruoyi.project.system.domain.SysMenu;
+import com.ruoyi.project.system.domain.SysRole;
 import com.ruoyi.project.system.domain.SysUser;
 import com.ruoyi.project.system.domain.vo.MetaVo;
 import com.ruoyi.project.system.domain.vo.RouterVo;
 import com.ruoyi.project.system.mapper.SysMenuMapper;
+import com.ruoyi.project.system.mapper.SysRoleMapper;
 import com.ruoyi.project.system.mapper.SysRoleMenuMapper;
 import com.ruoyi.project.system.service.ISysMenuService;
 
@@ -34,6 +36,9 @@ public class SysMenuServiceImpl implements ISysMenuService
 
     @Autowired
     private SysMenuMapper menuMapper;
+    
+    @Autowired
+    private SysRoleMapper roleMapper;
 
     @Autowired
     private SysRoleMenuMapper roleMenuMapper;
@@ -124,7 +129,8 @@ public class SysMenuServiceImpl implements ISysMenuService
     @Override
     public List<Integer> selectMenuListByRoleId(Long roleId)
     {
-        return menuMapper.selectMenuListByRoleId(roleId);
+        SysRole role = roleMapper.selectRoleById(roleId);
+        return menuMapper.selectMenuListByRoleId(roleId, role.isMenuCheckStrictly());
     }
 
     /**
