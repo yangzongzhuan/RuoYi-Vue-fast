@@ -64,7 +64,7 @@
 #end
 #end
       <el-form-item>
-	    <el-button type="cyan" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
+	    <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
       </el-form-item>
     </el-form>
@@ -73,6 +73,7 @@
       <el-col :span="1.5">
         <el-button
           type="primary"
+		  plain
           icon="el-icon-plus"
           size="mini"
           @click="handleAdd"
@@ -296,6 +297,10 @@ export default {
 #if(${column.dictType} != '')
       // $comment字典
       ${column.javaField}Options: [],
+#elseif($column.htmlType == "datetime" && $column.queryType == "BETWEEN")
+#set($AttrName=$column.javaField.substring(0,1).toUpperCase() + ${column.javaField.substring(1)})
+      // $comment时间范围
+      daterange${AttrName}: [],
 #end
 #end
       // 查询参数
@@ -342,6 +347,21 @@ export default {
     /** 查询${functionName}列表 */
     getList() {
       this.loading = true;
+#foreach ($column in $columns)
+#if($column.htmlType == "datetime" && $column.queryType == "BETWEEN")
+      this.queryParams.params = {};
+#break
+#end
+#end
+#foreach ($column in $columns)
+#if($column.htmlType == "datetime" && $column.queryType == "BETWEEN")
+#set($AttrName=$column.javaField.substring(0,1).toUpperCase() + ${column.javaField.substring(1)})
+      if (null != this.daterange${AttrName} && '' != this.daterange${AttrName}) {
+        this.queryParams.params["begin${AttrName}"] = this.daterange${AttrName}[0];
+        this.queryParams.params["end${AttrName}"] = this.daterange${AttrName}[1];
+      }
+#end
+#end
       list${BusinessName}(this.queryParams).then(response => {
         this.${businessName}List = this.handleTree(response.data, "${treeCode}", "${treeParentCode}");
         this.loading = false;
@@ -410,6 +430,12 @@ export default {
     },
     /** 重置按钮操作 */
     resetQuery() {
+#foreach ($column in $columns)
+#if($column.htmlType == "datetime" && $column.queryType == "BETWEEN")
+#set($AttrName=$column.javaField.substring(0,1).toUpperCase() + ${column.javaField.substring(1)})
+      this.daterange${AttrName} = [];
+#end
+#end
       this.resetForm("queryForm");
       this.handleQuery();
     },
