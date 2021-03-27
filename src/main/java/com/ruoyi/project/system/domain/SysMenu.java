@@ -49,7 +49,7 @@ public class SysMenu extends BaseEntity
 
     /** 显示状态（0显示 1隐藏） */
     private String visible;
-    
+
     /** 菜单状态（0显示 1隐藏） */
     private String status;
 
