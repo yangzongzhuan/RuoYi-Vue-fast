@@ -12,11 +12,16 @@ import com.ruoyi.common.exception.CustomException;
 import com.ruoyi.common.exception.user.CaptchaException;
 import com.ruoyi.common.exception.user.CaptchaExpireException;
 import com.ruoyi.common.exception.user.UserPasswordNotMatchException;
+import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.MessageUtils;
+import com.ruoyi.common.utils.ServletUtils;
+import com.ruoyi.common.utils.ip.IpUtils;
 import com.ruoyi.framework.manager.AsyncManager;
 import com.ruoyi.framework.manager.factory.AsyncFactory;
 import com.ruoyi.framework.redis.RedisCache;
 import com.ruoyi.framework.security.LoginUser;
+import com.ruoyi.project.system.domain.SysUser;
+import com.ruoyi.project.system.service.ISysUserService;
 
 /**
  * 登录校验方法
@@ -34,6 +39,9 @@ public class SysLoginService
 
     @Autowired
     private RedisCache redisCache;
+    
+    @Autowired
+    private ISysUserService userService;
 
     /**
      * 登录验证
@@ -82,7 +90,18 @@ public class SysLoginService
         }
         AsyncManager.me().execute(AsyncFactory.recordLogininfor(username, Constants.LOGIN_SUCCESS, MessageUtils.message("user.login.success")));
         LoginUser loginUser = (LoginUser) authentication.getPrincipal();
+        recordLoginInfo(loginUser.getUser());
         // 生成token
         return tokenService.createToken(loginUser);
+    }
+
+    /**
+     * 记录登录信息
+     */
+    public void recordLoginInfo(SysUser user)
+    {
+        user.setLoginIp(IpUtils.getIpAddr(ServletUtils.getRequest()));
+        user.setLoginDate(DateUtils.getNowDate());
+        userService.updateUserProfile(user);
     }
 }
