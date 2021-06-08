@@ -34,7 +34,7 @@
 		<bitwalker.version>1.21</bitwalker.version>
 		<jwt.version>0.9.1</jwt.version>
 		<kaptcha.version>2.3.2</kaptcha.version>
-		<swagger.version>2.9.2</swagger.version>
+		<swagger.version>3.0.0</swagger.version>
 		<poi.version>4.1.2</poi.version>
 		<oshi.version>5.6.0</oshi.version>
         <jna.version>5.7.0</jna.version>
@@ -114,27 +114,27 @@
 			<version>${pagehelper.spring.boot.starter.version}</version>
 		</dependency>
 
-		<!--阿里数据库连接池 -->
+		<!-- 阿里数据库连接池 -->
 		<dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>druid-spring-boot-starter</artifactId>
             <version>${druid.version}</version>
         </dependency>
 
-		<!--常用工具类 -->
+		<!-- 常用工具类 -->
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-lang3</artifactId>
 		</dependency>
 
-		<!--io常用工具类 -->
+		<!-- io常用工具类 -->
 		<dependency>
 			<groupId>commons-io</groupId>
 			<artifactId>commons-io</artifactId>
 			<version>${commons.io.version}</version>
 		</dependency>
 		
-		<!--文件上传工具类 -->
+		<!-- 文件上传工具类 -->
 		<dependency>
 			<groupId>commons-fileupload</groupId>
 			<artifactId>commons-fileupload</artifactId>
@@ -155,55 +155,36 @@
 			<version>${fastjson.version}</version>
 		</dependency>
 
-		<!--Spring框架基本的核心工具-->
+		<!-- Spring框架基本的核心工具-->
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-context-support</artifactId>
 		</dependency>
 		
-        <!--Token生成与解析-->
+        <!-- Token生成与解析-->
 		<dependency>
 			<groupId>io.jsonwebtoken</groupId>
 			<artifactId>jjwt</artifactId>
 			<version>${jwt.version}</version>
 		</dependency>
 		
-		<!-- swagger2-->
-		<dependency>
-			<groupId>io.springfox</groupId>
-			<artifactId>springfox-swagger2</artifactId>
-			<version>${swagger.version}</version>
-			<exclusions>
-			    <exclusion>
-			        <groupId>io.swagger</groupId>
-			        <artifactId>swagger-annotations</artifactId>
-			    </exclusion>
-			    <exclusion>
-			        <groupId>io.swagger</groupId>
-			        <artifactId>swagger-models</artifactId>
-			    </exclusion>
-			</exclusions>
-		</dependency>
-		
-		<!--防止进入swagger页面报类型转换错误，排除2.9.2中的引用，手动增加1.5.21版本-->
+		<!-- Swagger3依赖 -->
         <dependency>
-            <groupId>io.swagger</groupId>
-            <artifactId>swagger-annotations</artifactId>
-            <version>1.5.21</version>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-boot-starter</artifactId>
+            <version>3.0.0</version>
+            <exclusion>
+                <groupId>io.swagger</groupId>
+                <artifactId>swagger-models</artifactId>
+            </exclusion>
         </dependency>
         
+        <!-- 防止进入swagger页面报类型转换错误，排除3.0.0中的引用，手动增加1.6.2版本 -->
         <dependency>
             <groupId>io.swagger</groupId>
             <artifactId>swagger-models</artifactId>
-            <version>1.5.21</version>
+            <version>1.6.2</version>
         </dependency>
-        
-		<!-- swagger2-UI-->
-		<dependency>
-			<groupId>io.springfox</groupId>
-			<artifactId>springfox-swagger-ui</artifactId>
-			<version>${swagger.version}</version>
-		</dependency>
 		
         <!-- 获取系统信息 -->
 		<dependency>
@@ -251,7 +232,7 @@
 			</exclusions>
 		</dependency>
 		
-		<!--验证码 -->
+		<!-- 验证码 -->
         <dependency>
             <groupId>com.github.penggle</groupId>
             <artifactId>kaptcha</artifactId>
