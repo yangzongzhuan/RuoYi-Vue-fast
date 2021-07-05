@@ -26,6 +26,8 @@ import com.ruoyi.framework.web.controller.BaseController;
 import com.ruoyi.framework.web.domain.AjaxResult;
 import com.ruoyi.framework.web.page.TableDataInfo;
 import com.ruoyi.project.system.domain.SysRole;
+import com.ruoyi.project.system.domain.SysUser;
+import com.ruoyi.project.system.domain.SysUserRole;
 import com.ruoyi.project.system.service.ISysRoleService;
 import com.ruoyi.project.system.service.ISysUserService;
 
@@ -178,5 +180,60 @@ public class SysRoleController extends BaseController
     public AjaxResult optionselect()
     {
         return AjaxResult.success(roleService.selectRoleAll());
+    }
+
+    /**
+     * 查询已分配用户角色列表
+     */
+    @PreAuthorize("@ss.hasPermi('system:role:list')")
+    @GetMapping("/authUser/allocatedList")
+    public TableDataInfo allocatedList(SysUser user)
+    {
+        startPage();
+        List<SysUser> list = userService.selectAllocatedList(user);
+        return getDataTable(list);
+    }
+
+    /**
+     * 查询未分配用户角色列表
+     */
+    @PreAuthorize("@ss.hasPermi('system:role:list')")
+    @GetMapping("/authUser/unallocatedList")
+    public TableDataInfo unallocatedList(SysUser user)
+    {
+        startPage();
+        List<SysUser> list = userService.selectUnallocatedList(user);
+        return getDataTable(list);
+    }
+
+    /**
+     * 取消授权用户
+     */
+    @PreAuthorize("@ss.hasPermi('system:role:edit')")
+    @Log(title = "角色管理", businessType = BusinessType.GRANT)
+    @PutMapping("/authUser/cancel")
+    public AjaxResult cancelAuthUser(@RequestBody SysUserRole userRole)
+    {
+        return toAjax(roleService.deleteAuthUser(userRole));
+    }
+
+    /**
+     * 批量取消授权用户
+     */
+    @Log(title = "角色管理", businessType = BusinessType.GRANT)
+    @PutMapping("/authUser/cancelAll")
+    public AjaxResult cancelAuthUserAll(Long roleId, Long[] userIds)
+    {
+        return toAjax(roleService.deleteAuthUsers(roleId, userIds));
+    }
+
+    /**
+     * 批量选择用户授权
+     */
+    @Log(title = "角色管理", businessType = BusinessType.GRANT)
+    @PutMapping("/authUser/selectAll")
+    public AjaxResult selectAuthUserAll(Long roleId, Long[] userIds)
+    {
+        return toAjax(roleService.insertAuthUsers(roleId, userIds));
     }
 }
