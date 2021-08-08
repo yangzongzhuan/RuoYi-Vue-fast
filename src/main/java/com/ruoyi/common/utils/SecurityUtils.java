@@ -14,6 +14,37 @@ import com.ruoyi.framework.security.LoginUser;
  */
 public class SecurityUtils
 {
+
+    /**
+     * 用户ID
+     **/
+    public static Long getUserId()
+    {
+        try
+        {
+            return getLoginUser().getUserId();
+        }
+        catch (Exception e)
+        {
+            throw new CustomException("获取用户ID异常", HttpStatus.UNAUTHORIZED);
+        }
+    }
+
+    /**
+     * 获取部门ID
+     **/
+    public static Long getDeptId()
+    {
+        try
+        {
+            return getLoginUser().getDeptId();
+        }
+        catch (Exception e)
+        {
+            throw new CustomException("获取部门ID异常", HttpStatus.UNAUTHORIZED);
+        }
+    }
+
     /**
      * 获取用户账户
      **/

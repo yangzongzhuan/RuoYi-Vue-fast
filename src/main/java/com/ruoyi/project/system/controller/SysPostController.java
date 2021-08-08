@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.ruoyi.common.constant.UserConstants;
-import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.framework.aspectj.lang.annotation.Log;
 import com.ruoyi.framework.aspectj.lang.enums.BusinessType;
@@ -83,7 +82,7 @@ public class SysPostController extends BaseController
         {
             return AjaxResult.error("新增岗位'" + post.getPostName() + "'失败，岗位编码已存在");
         }
-        post.setCreateBy(SecurityUtils.getUsername());
+        post.setCreateBy(getUsername());
         return toAjax(postService.insertPost(post));
     }
 
@@ -103,7 +102,7 @@ public class SysPostController extends BaseController
         {
             return AjaxResult.error("修改岗位'" + post.getPostName() + "'失败，岗位编码已存在");
         }
-        post.setUpdateBy(SecurityUtils.getUsername());
+        post.setUpdateBy(getUsername());
         return toAjax(postService.updatePost(post));
     }
 

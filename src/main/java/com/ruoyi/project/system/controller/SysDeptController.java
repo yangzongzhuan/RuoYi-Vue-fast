@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.ruoyi.common.constant.UserConstants;
-import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.framework.aspectj.lang.annotation.Log;
 import com.ruoyi.framework.aspectj.lang.enums.BusinessType;
@@ -113,7 +112,7 @@ public class SysDeptController extends BaseController
         {
             return AjaxResult.error("新增部门'" + dept.getDeptName() + "'失败，部门名称已存在");
         }
-        dept.setCreateBy(SecurityUtils.getUsername());
+        dept.setCreateBy(getUsername());
         return toAjax(deptService.insertDept(dept));
     }
 
@@ -138,7 +137,7 @@ public class SysDeptController extends BaseController
         {
             return AjaxResult.error("该部门包含未停用的子部门！");
         }
-        dept.setUpdateBy(SecurityUtils.getUsername());
+        dept.setUpdateBy(getUsername());
         return toAjax(deptService.updateDept(dept));
     }
 

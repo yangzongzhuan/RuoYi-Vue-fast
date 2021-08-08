@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.ruoyi.common.constant.Constants;
 import com.ruoyi.common.exception.job.TaskException;
-import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.job.CronUtils;
 import com.ruoyi.common.utils.poi.ExcelUtil;
@@ -93,7 +92,7 @@ public class SysJobController extends BaseController
         {
             return error("新增任务'" + job.getJobName() + "'失败，目标字符串不允许'http(s)//'调用");
         }
-        job.setCreateBy(SecurityUtils.getUsername());
+        job.setCreateBy(getUsername());
         return toAjax(jobService.insertJob(job));
     }
 
@@ -117,7 +116,7 @@ public class SysJobController extends BaseController
         {
             return error("修改任务'" + job.getJobName() + "'失败，目标字符串不允许'http(s)//'调用");
         }
-        job.setUpdateBy(SecurityUtils.getUsername());
+        job.setUpdateBy(getUsername());
         return toAjax(jobService.updateJob(job));
     }
 

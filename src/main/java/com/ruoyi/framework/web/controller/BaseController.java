@@ -11,8 +11,10 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.ruoyi.common.constant.HttpStatus;
 import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.sql.SqlUtil;
+import com.ruoyi.framework.security.LoginUser;
 import com.ruoyi.framework.web.domain.AjaxResult;
 import com.ruoyi.framework.web.page.PageDomain;
 import com.ruoyi.framework.web.page.TableDataInfo;
@@ -87,17 +89,6 @@ public class BaseController
     }
 
     /**
-     * 响应返回结果
-     * 
-     * @param result 结果
-     * @return 操作结果
-     */
-    protected AjaxResult toAjax(boolean result)
-    {
-        return result ? success() : error();
-    }
-
-    /**
      * 返回成功
      */
     public AjaxResult success()
@@ -138,5 +129,48 @@ public class BaseController
     protected AjaxResult toAjax(int rows)
     {
         return rows > 0 ? AjaxResult.success() : AjaxResult.error();
+    }
+
+    /**
+     * 响应返回结果
+     * 
+     * @param result 结果
+     * @return 操作结果
+     */
+    protected AjaxResult toAjax(boolean result)
+    {
+        return result ? success() : error();
+    }
+
+    /**
+     * 获取用户缓存信息
+     */
+    public LoginUser getLoginUser()
+    {
+        return SecurityUtils.getLoginUser();
+    }
+
+    /**
+     * 获取登录用户id
+     */
+    public Long getUserId()
+    {
+        return getLoginUser().getUserId();
+    }
+
+    /**
+     * 获取登录部门id
+     */
+    public Long getDeptId()
+    {
+        return getLoginUser().getDeptId();
+    }
+
+    /**
+     * 获取登录用户名
+     */
+    public String getUsername()
+    {
+        return getLoginUser().getUsername();
     }
 }

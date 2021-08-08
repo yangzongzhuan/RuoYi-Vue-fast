@@ -13,13 +13,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.ruoyi.common.constant.UserConstants;
-import com.ruoyi.common.utils.SecurityUtils;
-import com.ruoyi.common.utils.ServletUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.framework.aspectj.lang.annotation.Log;
 import com.ruoyi.framework.aspectj.lang.enums.BusinessType;
-import com.ruoyi.framework.security.LoginUser;
-import com.ruoyi.framework.security.service.TokenService;
 import com.ruoyi.framework.web.controller.BaseController;
 import com.ruoyi.framework.web.domain.AjaxResult;
 import com.ruoyi.project.system.domain.SysMenu;
@@ -37,9 +33,6 @@ public class SysMenuController extends BaseController
     @Autowired
     private ISysMenuService menuService;
 
-    @Autowired
-    private TokenService tokenService;
-
     /**
      * 获取菜单列表
      */
@@ -47,8 +40,7 @@ public class SysMenuController extends BaseController
     @GetMapping("/list")
     public AjaxResult list(SysMenu menu)
     {
-        LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
-        Long userId = loginUser.getUser().getUserId();
+        Long userId = getUserId();
         List<SysMenu> menus = menuService.selectMenuList(menu, userId);
         return AjaxResult.success(menus);
     }
@@ -69,8 +61,7 @@ public class SysMenuController extends BaseController
     @GetMapping("/treeselect")
     public AjaxResult treeselect(SysMenu menu)
     {
-        LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
-        Long userId = loginUser.getUser().getUserId();
+        Long userId = getUserId();
         List<SysMenu> menus = menuService.selectMenuList(menu, userId);
         return AjaxResult.success(menuService.buildMenuTreeSelect(menus));
     }
@@ -81,8 +72,7 @@ public class SysMenuController extends BaseController
     @GetMapping(value = "/roleMenuTreeselect/{roleId}")
     public AjaxResult roleMenuTreeselect(@PathVariable("roleId") Long roleId)
     {
-        LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
-        List<SysMenu> menus = menuService.selectMenuList(loginUser.getUser().getUserId());
+        List<SysMenu> menus = menuService.selectMenuList(getUserId());
         AjaxResult ajax = AjaxResult.success();
         ajax.put("checkedKeys", menuService.selectMenuListByRoleId(roleId));
         ajax.put("menus", menuService.buildMenuTreeSelect(menus));
@@ -105,7 +95,7 @@ public class SysMenuController extends BaseController
         {
             return AjaxResult.error("新增菜单'" + menu.getMenuName() + "'失败，地址必须以http(s)://开头");
         }
-        menu.setCreateBy(SecurityUtils.getUsername());
+        menu.setCreateBy(getUsername());
         return toAjax(menuService.insertMenu(menu));
     }
 
@@ -129,7 +119,7 @@ public class SysMenuController extends BaseController
         {
             return AjaxResult.error("修改菜单'" + menu.getMenuName() + "'失败，上级菜单不能选择自己");
         }
-        menu.setUpdateBy(SecurityUtils.getUsername());
+        menu.setUpdateBy(getUsername());
         return toAjax(menuService.updateMenu(menu));
     }
 
