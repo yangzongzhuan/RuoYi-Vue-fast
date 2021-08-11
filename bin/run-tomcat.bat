@@ -1,6 +1,6 @@
 @echo off
 echo.
-echo [信息] 使用 Spring Boot Tomcat 运行 Web 工程。
+echo [信息] 使用内嵌Tomcat运行Web工程。
 echo.
 
 %~d0
