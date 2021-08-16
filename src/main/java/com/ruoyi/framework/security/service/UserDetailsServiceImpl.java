@@ -5,10 +5,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import com.ruoyi.common.enums.UserStatus;
-import com.ruoyi.common.exception.BaseException;
+import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.framework.security.LoginUser;
 import com.ruoyi.project.system.domain.SysUser;
@@ -31,23 +30,23 @@ public class UserDetailsServiceImpl implements UserDetailsService
     private SysPermissionService permissionService;
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException
+    public UserDetails loadUserByUsername(String username)
     {
         SysUser user = userService.selectUserByUserName(username);
         if (StringUtils.isNull(user))
         {
             log.info("登录用户：{} 不存在.", username);
-            throw new UsernameNotFoundException("登录用户：" + username + " 不存在");
+            throw new ServiceException("登录用户：" + username + " 不存在");
         }
         else if (UserStatus.DELETED.getCode().equals(user.getDelFlag()))
         {
             log.info("登录用户：{} 已被删除.", username);
-            throw new BaseException("对不起，您的账号：" + username + " 已被删除");
+            throw new ServiceException("对不起，您的账号：" + username + " 已被删除");
         }
         else if (UserStatus.DISABLE.getCode().equals(user.getStatus()))
         {
             log.info("登录用户：{} 已被停用.", username);
-            throw new BaseException("对不起，您的账号：" + username + " 已停用");
+            throw new ServiceException("对不起，您的账号：" + username + " 已停用");
         }
 
         return createLoginUser(user);
