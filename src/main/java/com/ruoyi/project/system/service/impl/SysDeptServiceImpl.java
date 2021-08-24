@@ -9,11 +9,14 @@ import org.springframework.stereotype.Service;
 import com.ruoyi.common.constant.UserConstants;
 import com.ruoyi.common.core.text.Convert;
 import com.ruoyi.common.exception.ServiceException;
+import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.common.utils.spring.SpringUtils;
 import com.ruoyi.framework.aspectj.lang.annotation.DataScope;
 import com.ruoyi.framework.web.domain.TreeSelect;
 import com.ruoyi.project.system.domain.SysDept;
 import com.ruoyi.project.system.domain.SysRole;
+import com.ruoyi.project.system.domain.SysUser;
 import com.ruoyi.project.system.mapper.SysDeptMapper;
 import com.ruoyi.project.system.mapper.SysRoleMapper;
 import com.ruoyi.project.system.service.ISysDeptService;
@@ -169,6 +172,26 @@ public class SysDeptServiceImpl implements ISysDeptService
             return UserConstants.NOT_UNIQUE;
         }
         return UserConstants.UNIQUE;
+    }
+
+    /**
+     * 校验部门是否有数据权限
+     * 
+     * @param deptId 部门id
+     */
+    @Override
+    public void checkDeptDataScope(Long deptId)
+    {
+        if (!SysUser.isAdmin(SecurityUtils.getUserId()))
+        {
+            SysDept dept = new SysDept();
+            dept.setDeptId(deptId);
+            List<SysDept> depts = SpringUtils.getAopProxy(this).selectDeptList(dept);
+            if (StringUtils.isEmpty(depts))
+            {
+                throw new ServiceException("没有权限访问部门数据！");
+            }
+        }
     }
 
     /**

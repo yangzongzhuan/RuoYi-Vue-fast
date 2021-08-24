@@ -10,12 +10,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.ruoyi.common.constant.UserConstants;
 import com.ruoyi.common.exception.ServiceException;
+import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.spring.SpringUtils;
 import com.ruoyi.framework.aspectj.lang.annotation.DataScope;
 import com.ruoyi.project.system.domain.SysRole;
 import com.ruoyi.project.system.domain.SysRoleDept;
 import com.ruoyi.project.system.domain.SysRoleMenu;
+import com.ruoyi.project.system.domain.SysUser;
 import com.ruoyi.project.system.domain.SysUserRole;
 import com.ruoyi.project.system.mapper.SysRoleDeptMapper;
 import com.ruoyi.project.system.mapper.SysRoleMapper;
@@ -184,6 +186,26 @@ public class SysRoleServiceImpl implements ISysRoleService
         if (StringUtils.isNotNull(role.getRoleId()) && role.isAdmin())
         {
             throw new ServiceException("不允许操作超级管理员角色");
+        }
+    }
+
+    /**
+     * 校验角色是否有数据权限
+     * 
+     * @param roleId 角色id
+     */
+    @Override
+    public void checkRoleDataScope(Long roleId)
+    {
+        if (!SysUser.isAdmin(SecurityUtils.getUserId()))
+        {
+            SysRole role = new SysRole();
+            role.setRoleId(roleId);
+            List<SysRole> roles = SpringUtils.getAopProxy(this).selectRoleList(role);
+            if (StringUtils.isEmpty(roles))
+            {
+                throw new ServiceException("没有权限访问角色数据！");
+            }
         }
     }
 
