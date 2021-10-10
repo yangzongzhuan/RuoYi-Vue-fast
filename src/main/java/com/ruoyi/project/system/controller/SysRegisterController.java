@@ -1,10 +1,10 @@
 package com.ruoyi.project.system.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.framework.security.RegisterBody;
 import com.ruoyi.framework.security.service.SysRegisterService;
 import com.ruoyi.framework.web.controller.BaseController;
