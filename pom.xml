@@ -36,8 +36,8 @@
 		<kaptcha.version>2.3.2</kaptcha.version>
 		<swagger.version>3.0.0</swagger.version>
 		<poi.version>4.1.2</poi.version>
-		<oshi.version>5.8.0</oshi.version>
-        <jna.version>5.8.0</jna.version>
+		<oshi.version>5.8.2</oshi.version>
+        <jna.version>5.9.0</jna.version>
 		<velocity.version>1.7</velocity.version>
 	</properties>
 
@@ -272,7 +272,7 @@
 		<repository>
 			<id>public</id>
 			<name>aliyun nexus</name>
-			<url>http://maven.aliyun.com/nexus/content/groups/public/</url>
+			<url>https://maven.aliyun.com/repository/public</url>
 			<releases>
 				<enabled>true</enabled>
 			</releases>
@@ -283,7 +283,7 @@
 		<pluginRepository>
 			<id>public</id>
 			<name>aliyun nexus</name>
-			<url>http://maven.aliyun.com/nexus/content/groups/public/</url>
+			<url>https://maven.aliyun.com/repository/public</url>
 			<releases>
 				<enabled>true</enabled>
 			</releases>
