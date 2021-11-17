@@ -1,6 +1,7 @@
 package com.ruoyi.project.system.controller;
 
 import java.util.List;
+import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -48,12 +49,12 @@ public class SysConfigController extends BaseController
 
     @Log(title = "参数管理", businessType = BusinessType.EXPORT)
     @PreAuthorize("@ss.hasPermi('system:config:export')")
-    @GetMapping("/export")
-    public AjaxResult export(SysConfig config)
+    @PostMapping("/export")
+    public void export(HttpServletResponse response, SysConfig config)
     {
         List<SysConfig> list = configService.selectConfigList(config);
         ExcelUtil<SysConfig> util = new ExcelUtil<SysConfig>(SysConfig.class);
-        return util.exportExcel(list, "参数数据");
+        util.exportExcel(response, list, "参数数据");
     }
 
     /**

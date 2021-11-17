@@ -40,8 +40,7 @@ public class SysMenuController extends BaseController
     @GetMapping("/list")
     public AjaxResult list(SysMenu menu)
     {
-        Long userId = getUserId();
-        List<SysMenu> menus = menuService.selectMenuList(menu, userId);
+        List<SysMenu> menus = menuService.selectMenuList(menu, getUserId());
         return AjaxResult.success(menus);
     }
 
@@ -61,8 +60,7 @@ public class SysMenuController extends BaseController
     @GetMapping("/treeselect")
     public AjaxResult treeselect(SysMenu menu)
     {
-        Long userId = getUserId();
-        List<SysMenu> menus = menuService.selectMenuList(menu, userId);
+        List<SysMenu> menus = menuService.selectMenuList(menu, getUserId());
         return AjaxResult.success(menuService.buildMenuTreeSelect(menus));
     }
 
