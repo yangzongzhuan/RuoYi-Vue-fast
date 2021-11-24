@@ -6,7 +6,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import javax.servlet.ServletRequest;
-import org.apache.commons.lang.exception.ExceptionUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -46,7 +46,7 @@ public class HttpHelper
                 }
                 catch (IOException e)
                 {
-                    LOGGER.error(ExceptionUtils.getFullStackTrace(e));
+                    LOGGER.error(ExceptionUtils.getMessage(e));
                 }
             }
         }
