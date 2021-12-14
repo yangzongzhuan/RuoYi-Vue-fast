@@ -39,6 +39,7 @@
         <oshi.version>5.8.2</oshi.version>
         <jna.version>5.9.0</jna.version>
         <velocity.version>2.3</velocity.version>
+        <log4j2.version>2.15.0</log4j2.version>
     </properties>
 
     <dependencies>
