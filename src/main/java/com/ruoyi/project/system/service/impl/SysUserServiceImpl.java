@@ -3,6 +3,7 @@ package com.ruoyi.project.system.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import javax.validation.Validator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import com.ruoyi.common.constant.UserConstants;
 import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.common.utils.bean.BeanValidators;
 import com.ruoyi.common.utils.spring.SpringUtils;
 import com.ruoyi.framework.aspectj.lang.annotation.DataScope;
 import com.ruoyi.project.system.domain.SysPost;
@@ -55,6 +57,9 @@ public class SysUserServiceImpl implements ISysUserService
 
     @Autowired
     private ISysConfigService configService;
+
+    @Autowired
+    protected Validator validator;
 
     /**
      * 根据条件分页查询用户列表
@@ -513,6 +518,7 @@ public class SysUserServiceImpl implements ISysUserService
                 SysUser u = userMapper.selectUserByUserName(user.getUserName());
                 if (StringUtils.isNull(u))
                 {
+                    BeanValidators.validateWithException(validator, user);
                     user.setPassword(SecurityUtils.encryptPassword(password));
                     user.setCreateBy(operName);
                     this.insertUser(user);
@@ -521,6 +527,7 @@ public class SysUserServiceImpl implements ISysUserService
                 }
                 else if (isUpdateSupport)
                 {
+                    BeanValidators.validateWithException(validator, user);
                     user.setUpdateBy(operName);
                     this.updateUser(user);
                     successNum++;
