@@ -36,8 +36,8 @@
         <kaptcha.version>2.3.2</kaptcha.version>
         <swagger.version>3.0.0</swagger.version>
         <poi.version>4.1.2</poi.version>
-        <oshi.version>5.8.2</oshi.version>
-        <jna.version>5.9.0</jna.version>
+        <oshi.version>5.8.6</oshi.version>
+        <jna.version>5.10.0</jna.version>
         <velocity.version>2.3</velocity.version>
         <log4j2.version>2.17.0</log4j2.version>
     </properties>
