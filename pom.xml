@@ -15,7 +15,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.5.6</version>
+        <version>2.5.8</version>
         <relativePath />
     </parent>
 
@@ -39,7 +39,6 @@
         <oshi.version>5.8.6</oshi.version>
         <jna.version>5.10.0</jna.version>
         <velocity.version>2.3</velocity.version>
-        <log4j2.version>2.17.0</log4j2.version>
     </properties>
 
     <dependencies>
