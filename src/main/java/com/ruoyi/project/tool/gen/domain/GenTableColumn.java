@@ -1,8 +1,11 @@
 package com.ruoyi.project.tool.gen.domain;
 
 import javax.validation.constraints.NotBlank;
+
+import com.ruoyi.common.constant.GenConstants;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.framework.web.domain.BaseEntity;
+import org.apache.commons.lang3.ArrayUtils;
 
 /**
  * 代码生成业务字段表 gen_table_column
@@ -331,10 +334,7 @@ public class GenTableColumn extends BaseEntity
     public static boolean isSuperColumn(String javaField)
     {
         return StringUtils.equalsAnyIgnoreCase(javaField,
-                // BaseEntity
-                "createBy", "createTime", "updateBy", "updateTime", "remark",
-                // TreeEntity
-                "parentName", "parentId", "orderNum", "ancestors");
+                ArrayUtils.addAll(GenConstants.TREE_ENTITY, GenConstants.BASE_ENTITY));
     }
 
     public boolean isUsableColumn()
