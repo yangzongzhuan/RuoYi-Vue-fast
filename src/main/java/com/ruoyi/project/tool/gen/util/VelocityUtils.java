@@ -30,7 +30,7 @@ public class VelocityUtils
 
     /**
      * 设置模板变量信息
-     * 
+     *
      * @return 模板列表
      */
     public static VelocityContext prepareContext(GenTable genTable)
@@ -119,9 +119,10 @@ public class VelocityUtils
         context.put("subclassName", StringUtils.uncapitalize(subClassName));
         context.put("subImportList", getImportList(genTable.getSubTable()));
     }
+
     /**
      * 获取模板信息
-     * 
+     *
      * @return 模板列表
      */
     public static List<String> getTemplateList(String tplCategory)
@@ -220,15 +221,14 @@ public class VelocityUtils
 
     /**
      * 获取包前缀
-     * 
+     *
      * @param packageName 包名称
      * @return 包前缀名称
      */
     public static String getPackagePrefix(String packageName)
     {
         int lastIndex = packageName.lastIndexOf(".");
-        String basePackage = StringUtils.substring(packageName, 0, lastIndex);
-        return basePackage;
+        return StringUtils.substring(packageName, 0, lastIndex);
     }
 
     /**
@@ -285,7 +285,7 @@ public class VelocityUtils
 
     /**
      * 获取权限前缀
-     * 
+     *
      * @param moduleName 模块名称
      * @param businessName 业务名称
      * @return 返回权限前缀
@@ -297,8 +297,8 @@ public class VelocityUtils
 
     /**
      * 获取上级菜单ID字段
-     * 
-     * @param options 生成其他选项
+     *
+     * @param paramsObj 生成其他选项
      * @return 上级菜单ID字段
      */
     public static String getParentMenuId(JSONObject paramsObj)
@@ -313,8 +313,8 @@ public class VelocityUtils
 
     /**
      * 获取树编码
-     * 
-     * @param options 生成其他选项
+     *
+     * @param paramsObj 生成其他选项
      * @return 树编码
      */
     public static String getTreecode(JSONObject paramsObj)
@@ -328,8 +328,8 @@ public class VelocityUtils
 
     /**
      * 获取树父编码
-     * 
-     * @param options 生成其他选项
+     *
+     * @param paramsObj 生成其他选项
      * @return 树父编码
      */
     public static String getTreeParentCode(JSONObject paramsObj)
@@ -343,8 +343,8 @@ public class VelocityUtils
 
     /**
      * 获取树名称
-     * 
-     * @param options 生成其他选项
+     *
+     * @param paramsObj 生成其他选项
      * @return 树名称
      */
     public static String getTreeName(JSONObject paramsObj)
@@ -358,7 +358,7 @@ public class VelocityUtils
 
     /**
      * 获取需要在哪一列上面显示展开按钮
-     * 
+     *
      * @param genTable 业务表对象
      * @return 展开按钮列序号
      */
