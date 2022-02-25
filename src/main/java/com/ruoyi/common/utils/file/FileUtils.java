@@ -14,8 +14,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import com.ruoyi.common.utils.DateUtils;
-import com.ruoyi.common.utils.IdUtils;
 import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.common.utils.uuid.IdUtils;
 import com.ruoyi.framework.config.RuoYiConfig;
 
 /**
