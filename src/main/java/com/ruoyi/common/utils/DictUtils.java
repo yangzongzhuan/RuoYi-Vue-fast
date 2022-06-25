@@ -3,7 +3,7 @@ package com.ruoyi.common.utils;
 import java.util.Collection;
 import java.util.List;
 import com.alibaba.fastjson2.JSONArray;
-import com.ruoyi.common.constant.Constants;
+import com.ruoyi.common.constant.CacheConstants;
 import com.ruoyi.common.utils.spring.SpringUtils;
 import com.ruoyi.framework.redis.RedisCache;
 import com.ruoyi.project.system.domain.SysDictData;
@@ -169,7 +169,7 @@ public class DictUtils
      */
     public static void clearDictCache()
     {
-        Collection<String> keys = SpringUtils.getBean(RedisCache.class).keys(Constants.SYS_DICT_KEY + "*");
+        Collection<String> keys = SpringUtils.getBean(RedisCache.class).keys(CacheConstants.SYS_DICT_KEY + "*");
         SpringUtils.getBean(RedisCache.class).deleteObject(keys);
     }
 
@@ -181,6 +181,6 @@ public class DictUtils
      */
     public static String getCacheKey(String configKey)
     {
-        return Constants.SYS_DICT_KEY + configKey;
+        return CacheConstants.SYS_DICT_KEY + configKey;
     }
 }
