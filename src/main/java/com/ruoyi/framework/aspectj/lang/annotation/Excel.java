@@ -102,14 +102,29 @@ public @interface Excel
      * 是否自动统计数据,在最后追加一行统计数据总和
      */
     public boolean isStatistics() default false;
-    
+
     /**
      * 导出类型（0数字 1字符串）
      */
     public ColumnType cellType() default ColumnType.STRING;
 
     /**
-     * 导出字体颜色
+     * 导出列头背景色
+     */
+    public IndexedColors headerBackgroundColor() default IndexedColors.GREY_50_PERCENT;
+
+    /**
+     * 导出列头字体颜色
+     */
+    public IndexedColors headerColor() default IndexedColors.WHITE;
+
+    /**
+     * 导出单元格背景色
+     */
+    public IndexedColors backgroundColor() default IndexedColors.WHITE;
+
+    /**
+     * 导出单元格字体颜色
      */
     public IndexedColors color() default IndexedColors.BLACK;
 
