@@ -89,6 +89,11 @@ public @interface Excel
     public String[] combo() default {};
 
     /**
+     * 是否需要纵向合并单元格,应对需求:含有list集合单元格)
+     */
+    public boolean needMerge() default false;
+
+    /**
      * 是否导出数据,应对需求:有时我们需要导出一份模板,这是标题需要但内容需要用户手工填写.
      */
     public boolean isExport() default true;
@@ -104,7 +109,7 @@ public @interface Excel
     public boolean isStatistics() default false;
 
     /**
-     * 导出类型（0数字 1字符串）
+     * 导出类型（0数字 1字符串 2图片）
      */
     public ColumnType cellType() default ColumnType.STRING;
 
