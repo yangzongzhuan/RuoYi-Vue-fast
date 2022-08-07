@@ -62,6 +62,19 @@ public class RedisCache
     }
 
     /**
+     * 设置有效时间
+     *
+     * @param key Redis键
+     * @param timeout 超时时间
+     * @param unit 时间单位
+     * @return true=设置成功；false=设置失败
+     */
+    public boolean expire(final String key, final long timeout, final TimeUnit unit)
+    {
+        return redisTemplate.expire(key, timeout, unit);
+    }
+
+    /**
      * 获取有效时间
      *
      * @param key Redis键
@@ -81,19 +94,6 @@ public class RedisCache
     public Boolean hasKey(String key)
     {
         return redisTemplate.hasKey(key);
-    }
-
-    /**
-     * 设置有效时间
-     *
-     * @param key Redis键
-     * @param timeout 超时时间
-     * @param unit 时间单位
-     * @return true=设置成功；false=设置失败
-     */
-    public boolean expire(final String key, final long timeout, final TimeUnit unit)
-    {
-        return redisTemplate.expire(key, timeout, unit);
     }
 
     /**
@@ -253,6 +253,18 @@ public class RedisCache
     public <T> List<T> getMultiCacheMapValue(final String key, final Collection<Object> hKeys)
     {
         return redisTemplate.opsForHash().multiGet(key, hKeys);
+    }
+
+    /**
+     * 删除Hash中的某条数据
+     *
+     * @param key Redis键
+     * @param hKey Hash键
+     * @return 是否成功
+     */
+    public boolean deleteCacheMapValue(final String key, final String hKey)
+    {
+        return Boolean.TRUE.equals(redisTemplate.opsForHash().delete(key, hKey));
     }
 
     /**
