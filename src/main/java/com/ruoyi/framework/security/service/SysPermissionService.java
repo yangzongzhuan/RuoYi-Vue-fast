@@ -1,9 +1,11 @@
 package com.ruoyi.framework.security.service;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import com.ruoyi.project.system.domain.SysRole;
 import com.ruoyi.project.system.domain.SysUser;
 import com.ruoyi.project.system.service.ISysMenuService;
 import com.ruoyi.project.system.service.ISysRoleService;
@@ -59,7 +61,21 @@ public class SysPermissionService
         }
         else
         {
-            perms.addAll(menuService.selectMenuPermsByUserId(user.getUserId()));
+            List<SysRole> roles = user.getRoles();
+            if (!roles.isEmpty() && roles.size() > 1)
+            {
+                // 多角色设置permissions属性，以便数据权限匹配权限
+                for (SysRole role : roles)
+                {
+                    Set<String> rolePerms = menuService.selectMenuPermsByRoleId(role.getRoleId());
+                    role.setPermissions(rolePerms);
+                    perms.addAll(rolePerms);
+                }
+            }
+            else
+            {
+                perms.addAll(menuService.selectMenuPermsByUserId(user.getUserId()));
+            }
         }
         return perms;
     }
