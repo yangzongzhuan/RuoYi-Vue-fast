@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 
 /**
  * spring redis 工具类
- * 
+ *
  * @author ruoyi
  **/
 @SuppressWarnings(value = { "unchecked", "rawtypes" })
@@ -75,6 +75,28 @@ public class RedisCache
     }
 
     /**
+     * 获取有效时间
+     *
+     * @param key Redis键
+     * @return 有效时间
+     */
+    public long getExpire(final String key)
+    {
+        return redisTemplate.getExpire(key);
+    }
+
+    /**
+     * 判断 key是否存在
+     *
+     * @param key 键
+     * @return true 存在 false不存在
+     */
+    public Boolean hasKey(String key)
+    {
+        return redisTemplate.hasKey(key);
+    }
+
+    /**
      * 获得缓存的基本对象。
      *
      * @param key 缓存键值
@@ -102,16 +124,16 @@ public class RedisCache
      * @param collection 多个对象
      * @return
      */
-    public long deleteObject(final Collection collection)
+    public boolean deleteObject(final Collection collection)
     {
-        return redisTemplate.delete(collection);
+        return redisTemplate.delete(collection) > 0;
     }
 
     /**
      * 缓存List数据
      *
      * @param key 缓存的键值
-     * @param values 待缓存的List数据
+     * @param dataList 待缓存的List数据
      * @return 缓存的对象
      */
     public <T> long setCacheList(final String key, final List<T> dataList)
@@ -222,8 +244,20 @@ public class RedisCache
     }
 
     /**
+     * 删除Hash中的某条数据
+     *
+     * @param key Redis键
+     * @param hKey Hash键
+     * @return 是否成功
+     */
+    public boolean deleteCacheMapValue(final String key, final String hKey)
+    {
+        return redisTemplate.opsForHash().delete(key, hKey) > 0;
+    }
+
+    /**
      * 获得缓存的基本对象列表
-     * 
+     *
      * @param pattern 字符串前缀
      * @return 对象列表
      */

@@ -25,8 +25,10 @@ import com.ruoyi.framework.aspectj.lang.enums.BusinessType;
 import com.ruoyi.framework.web.controller.BaseController;
 import com.ruoyi.framework.web.domain.AjaxResult;
 import com.ruoyi.framework.web.page.TableDataInfo;
+import com.ruoyi.project.system.domain.SysDept;
 import com.ruoyi.project.system.domain.SysRole;
 import com.ruoyi.project.system.domain.SysUser;
+import com.ruoyi.project.system.service.ISysDeptService;
 import com.ruoyi.project.system.service.ISysPostService;
 import com.ruoyi.project.system.service.ISysRoleService;
 import com.ruoyi.project.system.service.ISysUserService;
@@ -45,6 +47,9 @@ public class SysUserController extends BaseController
 
     @Autowired
     private ISysRoleService roleService;
+
+    @Autowired
+    private ISysDeptService deptService;
 
     @Autowired
     private ISysPostService postService;
@@ -120,7 +125,7 @@ public class SysUserController extends BaseController
     @PostMapping
     public AjaxResult add(@Validated @RequestBody SysUser user)
     {
-        if (UserConstants.NOT_UNIQUE.equals(userService.checkUserNameUnique(user.getUserName())))
+        if (UserConstants.NOT_UNIQUE.equals(userService.checkUserNameUnique(user)))
         {
             return AjaxResult.error("新增用户'" + user.getUserName() + "'失败，登录账号已存在");
         }
@@ -149,7 +154,11 @@ public class SysUserController extends BaseController
     {
         userService.checkUserAllowed(user);
         userService.checkUserDataScope(user.getUserId());
-        if (StringUtils.isNotEmpty(user.getPhonenumber())
+        if (UserConstants.NOT_UNIQUE.equals(userService.checkUserNameUnique(user)))
+        {
+            return AjaxResult.error("修改用户'" + user.getUserName() + "'失败，登录账号已存在");
+        }
+        else if (StringUtils.isNotEmpty(user.getPhonenumber())
                 && UserConstants.NOT_UNIQUE.equals(userService.checkPhoneUnique(user)))
         {
             return AjaxResult.error("修改用户'" + user.getUserName() + "'失败，手机号码已存在");
@@ -233,5 +242,15 @@ public class SysUserController extends BaseController
         userService.checkUserDataScope(userId);
         userService.insertUserAuth(userId, roleIds);
         return success();
+    }
+
+    /**
+     * 获取部门树列表
+     */
+    @PreAuthorize("@ss.hasPermi('system:user:list')")
+    @GetMapping("/deptTree")
+    public AjaxResult deptTree(SysDept dept)
+    {
+        return AjaxResult.success(deptService.selectDeptTreeList(dept));
     }
 }

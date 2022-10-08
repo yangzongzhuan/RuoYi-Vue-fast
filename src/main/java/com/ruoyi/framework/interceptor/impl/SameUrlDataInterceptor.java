@@ -7,8 +7,8 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import com.alibaba.fastjson.JSONObject;
-import com.ruoyi.common.constant.Constants;
+import com.alibaba.fastjson2.JSON;
+import com.ruoyi.common.constant.CacheConstants;
 import com.ruoyi.common.filter.RepeatedlyRequestWrapper;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.http.HttpHelper;
@@ -50,7 +50,7 @@ public class SameUrlDataInterceptor extends RepeatSubmitInterceptor
         // body参数为空，获取Parameter的数据
         if (StringUtils.isEmpty(nowParams))
         {
-            nowParams = JSONObject.toJSONString(request.getParameterMap());
+            nowParams = JSON.toJSONString(request.getParameterMap());
         }
         Map<String, Object> nowDataMap = new HashMap<String, Object>();
         nowDataMap.put(REPEAT_PARAMS, nowParams);
@@ -63,7 +63,7 @@ public class SameUrlDataInterceptor extends RepeatSubmitInterceptor
         String submitKey = StringUtils.trimToEmpty(request.getHeader(header));
 
         // 唯一标识（指定key + url + 消息头）
-        String cacheRepeatKey = Constants.REPEAT_SUBMIT_KEY + url + submitKey;
+        String cacheRepeatKey = CacheConstants.REPEAT_SUBMIT_KEY + url + submitKey;
 
         Object sessionObj = redisCache.getCacheObject(cacheRepeatKey);
         if (sessionObj != null)

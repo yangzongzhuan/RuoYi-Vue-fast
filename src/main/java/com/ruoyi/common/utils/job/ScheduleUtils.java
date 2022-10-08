@@ -15,6 +15,7 @@ import com.ruoyi.common.constant.ScheduleConstants;
 import com.ruoyi.common.exception.job.TaskException;
 import com.ruoyi.common.exception.job.TaskException.Code;
 import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.common.utils.spring.SpringUtils;
 import com.ruoyi.project.monitor.domain.SysJob;
 
 /**
@@ -82,7 +83,12 @@ public class ScheduleUtils
             scheduler.deleteJob(getJobKey(jobId, jobGroup));
         }
 
-        scheduler.scheduleJob(jobDetail, trigger);
+        // 判断任务是否过期
+        if (StringUtils.isNotNull(CronUtils.getNextExecution(job.getCronExpression())))
+        {
+            // 执行调度任务
+            scheduler.scheduleJob(jobDetail, trigger);
+        }
 
         // 暂停任务
         if (job.getStatus().equals(ScheduleConstants.Status.PAUSE.getValue()))
@@ -125,11 +131,9 @@ public class ScheduleUtils
         int count = StringUtils.countMatches(packageName, ".");
         if (count > 1)
         {
-            if (!StringUtils.containsAnyIgnoreCase(invokeTarget, Constants.JOB_WHITELIST_STR))
-            {
-                return false;
-            }
+            return StringUtils.containsAnyIgnoreCase(invokeTarget, Constants.JOB_WHITELIST_STR);
         }
-        return true;
+        Object obj = SpringUtils.getBean(StringUtils.split(invokeTarget, ".")[0]);
+        return StringUtils.containsAnyIgnoreCase(obj.getClass().getPackage().getName(), Constants.JOB_WHITELIST_STR);
     }
 }

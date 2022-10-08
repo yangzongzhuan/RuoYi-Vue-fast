@@ -5,7 +5,7 @@
 
     <groupId>com.ruoyi</groupId>
     <artifactId>ruoyi</artifactId>
-    <version>3.8.1</version>
+    <version>3.8.4</version>
     <packaging>jar</packaging>
 
     <name>ruoyi</name>
@@ -15,7 +15,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.5.9</version>
+        <version>2.5.14</version>
         <relativePath />
     </parent>
 
@@ -25,9 +25,9 @@
         <java.version>1.8</java.version>
         <maven-jar-plugin.version>3.1.1</maven-jar-plugin.version>
         <mybatis.spring.boot.starter.version>2.2.2</mybatis.spring.boot.starter.version>
-        <pagehelper.spring.boot.starter.version>1.4.1</pagehelper.spring.boot.starter.version>
-        <fastjson.version>1.2.79</fastjson.version>
-        <druid.version>1.2.8</druid.version>
+        <pagehelper.spring.boot.starter.version>1.4.3</pagehelper.spring.boot.starter.version>
+        <fastjson.version>2.0.14</fastjson.version>
+        <druid.version>1.2.11</druid.version>
         <commons.io.version>2.11.0</commons.io.version>
         <commons.fileupload.version>1.4</commons.fileupload.version>
         <commons.collections.version>3.2.2</commons.collections.version>
@@ -36,8 +36,7 @@
         <kaptcha.version>2.3.2</kaptcha.version>
         <swagger.version>3.0.0</swagger.version>
         <poi.version>4.1.2</poi.version>
-        <oshi.version>6.1.2</oshi.version>
-        <jna.version>5.10.0</jna.version>
+        <oshi.version>6.2.2</oshi.version>
         <velocity.version>2.3</velocity.version>
     </properties>
 
@@ -156,8 +155,8 @@
 
         <!-- 阿里JSON解析器 -->
         <dependency>
-            <groupId>com.alibaba</groupId>
-            <artifactId>fastjson</artifactId>
+            <groupId>com.alibaba.fastjson2</groupId>
+            <artifactId>fastjson2</artifactId>
             <version>${fastjson.version}</version>
         </dependency>
 

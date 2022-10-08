@@ -43,7 +43,7 @@
           v-model="queryParams.${column.javaField}"
           type="date"
           value-format="YYYY-MM-DD"
-          placeholder="选择${comment}">
+          placeholder="请选择${comment}">
         </el-date-picker>
       </el-form-item>
 #elseif($column.htmlType == "datetime" && $column.queryType == "BETWEEN")
@@ -260,7 +260,7 @@
             v-model="form.${field}"
             type="date"
             value-format="YYYY-MM-DD"
-            placeholder="选择${comment}">
+            placeholder="请选择${comment}">
           </el-date-picker>
         </el-form-item>
 #elseif($column.htmlType == "textarea")
@@ -293,10 +293,42 @@
 #set($comment=$column.columnComment)
 #end
 #if($column.pk || $javaField == ${subTableFkclassName})
-#elseif($column.list && "" != $javaField)
-          <el-table-column label="$comment" prop="${javaField}">
+#elseif($column.list && $column.htmlType == "input")
+          <el-table-column label="$comment" prop="${javaField}" width="150">
             <template #default="scope">
               <el-input v-model="scope.row.$javaField" placeholder="请输入$comment" />
+            </template>
+          </el-table-column>
+#elseif($column.list && $column.htmlType == "datetime")
+          <el-table-column label="$comment" prop="${javaField}" width="240">
+            <template #default="scope">
+              <el-date-picker clearable
+                v-model="scope.row.$javaField"
+                type="date"
+                value-format="YYYY-MM-DD"
+                placeholder="请选择$comment">
+              </el-date-picker>
+            </template>
+          </el-table-column>
+#elseif($column.list && ($column.htmlType == "select" || $column.htmlType == "radio") && "" != $column.dictType)
+          <el-table-column label="$comment" prop="${javaField}" width="150">
+            <template #default="scope">
+              <el-select v-model="scope.row.$javaField" placeholder="请选择$comment">
+                <el-option
+                  v-for="dict in $column.dictType"
+                  :key="dict.value"
+                  :label="dict.label"
+                  :value="dict.value"
+                ></el-option>
+              </el-select>
+            </template>
+          </el-table-column>
+#elseif($column.list && ($column.htmlType == "select" || $column.htmlType == "radio") && "" == $column.dictType)
+          <el-table-column label="$comment" prop="${javaField}" width="150">
+            <template #default="scope">
+              <el-select v-model="scope.row.$javaField" placeholder="请选择$comment">
+                <el-option label="请选择字典生成" value="" />
+              </el-select>
             </template>
           </el-table-column>
 #end
@@ -460,8 +492,8 @@ function handleAdd() {
 /** 修改按钮操作 */
 function handleUpdate(row) {
   reset();
-  const ${pkColumn.javaField} = row.${pkColumn.javaField} || ids.value
-  get${BusinessName}(${pkColumn.javaField}).then(response => {
+  const _${pkColumn.javaField} = row.${pkColumn.javaField} || ids.value
+  get${BusinessName}(_${pkColumn.javaField}).then(response => {
     form.value = response.data;
 #foreach ($column in $columns)
 #if($column.htmlType == "checkbox")
@@ -507,9 +539,9 @@ function submitForm() {
 
 /** 删除按钮操作 */
 function handleDelete(row) {
-  const ${pkColumn.javaField}s = row.${pkColumn.javaField} || ids.value;
-  proxy.#[[$modal]]#.confirm('是否确认删除${functionName}编号为"' + ${pkColumn.javaField}s + '"的数据项？').then(function() {
-    return del${BusinessName}(${pkColumn.javaField}s);
+  const _${pkColumn.javaField}s = row.${pkColumn.javaField} || ids.value;
+  proxy.#[[$modal]]#.confirm('是否确认删除${functionName}编号为"' + _${pkColumn.javaField}s + '"的数据项？').then(function() {
+    return del${BusinessName}(_${pkColumn.javaField}s);
   }).then(() => {
     getList();
     proxy.#[[$modal]]#.msgSuccess("删除成功");

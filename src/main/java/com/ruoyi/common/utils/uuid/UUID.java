@@ -1,4 +1,4 @@
-package com.ruoyi.common.core.lang;
+package com.ruoyi.common.utils.uuid;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;

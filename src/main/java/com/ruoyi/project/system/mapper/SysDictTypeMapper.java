@@ -1,7 +1,6 @@
 package com.ruoyi.project.system.mapper;
 
 import java.util.List;
-import org.apache.ibatis.annotations.Mapper;
 import com.ruoyi.project.system.domain.SysDictType;
 
 /**
@@ -9,7 +8,6 @@ import com.ruoyi.project.system.domain.SysDictType;
  * 
  * @author ruoyi
  */
-@Mapper
 public interface SysDictTypeMapper
 {
     /**

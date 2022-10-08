@@ -1,13 +1,17 @@
 package com.ruoyi.framework.aspectj;
 
+import java.util.ArrayList;
+import java.util.List;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.springframework.stereotype.Component;
+import com.ruoyi.common.core.text.Convert;
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.framework.aspectj.lang.annotation.DataScope;
 import com.ruoyi.framework.security.LoginUser;
+import com.ruoyi.framework.security.context.PermissionContextHolder;
 import com.ruoyi.framework.web.domain.BaseEntity;
 import com.ruoyi.project.system.domain.SysRole;
 import com.ruoyi.project.system.domain.SysUser;
@@ -68,8 +72,9 @@ public class DataScopeAspect
             // 如果是超级管理员，则不过滤数据
             if (StringUtils.isNotNull(currentUser) && !currentUser.isAdmin())
             {
+                String permission = StringUtils.defaultIfEmpty(controllerDataScope.permission(), PermissionContextHolder.getContext());
                 dataScopeFilter(joinPoint, currentUser, controllerDataScope.deptAlias(),
-                        controllerDataScope.userAlias());
+                        controllerDataScope.userAlias(), permission);
             }
         }
     }
@@ -79,15 +84,27 @@ public class DataScopeAspect
      *
      * @param joinPoint 切点
      * @param user 用户
-     * @param userAlias 别名
+     * @param deptAlias 部门别名
+     * @param userAlias 用户别名
+     * @param permission 权限字符
      */
-    public static void dataScopeFilter(JoinPoint joinPoint, SysUser user, String deptAlias, String userAlias)
+    public static void dataScopeFilter(JoinPoint joinPoint, SysUser user, String deptAlias, String userAlias, String permission)
     {
         StringBuilder sqlString = new StringBuilder();
+        List<String> conditions = new ArrayList<String>();
 
         for (SysRole role : user.getRoles())
         {
             String dataScope = role.getDataScope();
+            if (!DATA_SCOPE_CUSTOM.equals(dataScope) && conditions.contains(dataScope))
+            {
+                continue;
+            }
+            if (StringUtils.isNotEmpty(permission) && StringUtils.isNotEmpty(role.getPermissions())
+                    && !StringUtils.containsAny(role.getPermissions(), Convert.toStrArray(permission)))
+            {
+                continue;
+            }
             if (DATA_SCOPE_ALL.equals(dataScope))
             {
                 sqlString = new StringBuilder();
@@ -118,9 +135,10 @@ public class DataScopeAspect
                 else
                 {
                     // 数据权限为仅本人且没有userAlias别名不查询任何数据
-                    sqlString.append(" OR 1=0 ");
+                    sqlString.append(StringUtils.format(" OR {}.dept_id = 0 ", deptAlias));
                 }
             }
+            conditions.add(dataScope);
         }
 
         if (StringUtils.isNotBlank(sqlString.toString()))

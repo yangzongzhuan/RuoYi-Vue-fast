@@ -5,7 +5,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import org.apache.velocity.VelocityContext;
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONObject;
 import com.ruoyi.common.constant.GenConstants;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.StringUtils;
@@ -75,7 +76,7 @@ public class VelocityUtils
     public static void setMenuVelocityContext(VelocityContext context, GenTable genTable)
     {
         String options = genTable.getOptions();
-        JSONObject paramsObj = JSONObject.parseObject(options);
+        JSONObject paramsObj = JSON.parseObject(options);
         String parentMenuId = getParentMenuId(paramsObj);
         context.put("parentMenuId", parentMenuId);
     }
@@ -83,7 +84,7 @@ public class VelocityUtils
     public static void setTreeVelocityContext(VelocityContext context, GenTable genTable)
     {
         String options = genTable.getOptions();
-        JSONObject paramsObj = JSONObject.parseObject(options);
+        JSONObject paramsObj = JSON.parseObject(options);
         String treeCode = getTreecode(paramsObj);
         String treeParentCode = getTreeParentCode(paramsObj);
         String treeName = getTreeName(paramsObj);
@@ -271,6 +272,23 @@ public class VelocityUtils
     {
         List<GenTableColumn> columns = genTable.getColumns();
         Set<String> dicts = new HashSet<String>();
+        addDicts(dicts, columns);
+        if (StringUtils.isNotNull(genTable.getSubTable()))
+        {
+            List<GenTableColumn> subColumns = genTable.getSubTable().getColumns();
+            addDicts(dicts, subColumns);
+        }
+        return StringUtils.join(dicts, ", ");
+    }
+
+    /**
+     * 添加字典列表
+     * 
+     * @param dicts 字典列表
+     * @param columns 列集合
+     */
+    public static void addDicts(Set<String> dicts, List<GenTableColumn> columns)
+    {
         for (GenTableColumn column : columns)
         {
             if (!column.isSuperColumn() && StringUtils.isNotEmpty(column.getDictType()) && StringUtils.equalsAny(
@@ -280,7 +298,6 @@ public class VelocityUtils
                 dicts.add("'" + column.getDictType() + "'");
             }
         }
-        return StringUtils.join(dicts, ", ");
     }
 
     /**
@@ -365,7 +382,7 @@ public class VelocityUtils
     public static int getExpandColumn(GenTable genTable)
     {
         String options = genTable.getOptions();
-        JSONObject paramsObj = JSONObject.parseObject(options);
+        JSONObject paramsObj = JSON.parseObject(options);
         String treeName = paramsObj.getString(GenConstants.TREE_NAME);
         int num = 0;
         for (GenTableColumn column : genTable.getColumns())

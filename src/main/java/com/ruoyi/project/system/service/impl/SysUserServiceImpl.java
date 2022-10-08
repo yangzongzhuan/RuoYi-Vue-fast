@@ -161,14 +161,15 @@ public class SysUserServiceImpl implements ISysUserService
     /**
      * 校验用户名称是否唯一
      * 
-     * @param userName 用户名称
+     * @param user 用户信息
      * @return 结果
      */
     @Override
-    public String checkUserNameUnique(String userName)
+    public String checkUserNameUnique(SysUser user)
     {
-        int count = userMapper.checkUserNameUnique(userName);
-        if (count > 0)
+        Long userId = StringUtils.isNull(user.getUserId()) ? -1L : user.getUserId();
+        SysUser info = userMapper.checkUserNameUnique(user.getUserName());
+        if (StringUtils.isNotNull(info) && info.getUserId().longValue() != userId.longValue())
         {
             return UserConstants.NOT_UNIQUE;
         }
@@ -381,23 +382,7 @@ public class SysUserServiceImpl implements ISysUserService
      */
     public void insertUserRole(SysUser user)
     {
-        Long[] roles = user.getRoleIds();
-        if (StringUtils.isNotNull(roles))
-        {
-            // 新增用户与角色管理
-            List<SysUserRole> list = new ArrayList<SysUserRole>();
-            for (Long roleId : roles)
-            {
-                SysUserRole ur = new SysUserRole();
-                ur.setUserId(user.getUserId());
-                ur.setRoleId(roleId);
-                list.add(ur);
-            }
-            if (list.size() > 0)
-            {
-                userRoleMapper.batchUserRole(list);
-            }
-        }
+        this.insertUserRole(user.getUserId(), user.getRoleIds());
     }
 
     /**
@@ -408,10 +393,10 @@ public class SysUserServiceImpl implements ISysUserService
     public void insertUserPost(SysUser user)
     {
         Long[] posts = user.getPostIds();
-        if (StringUtils.isNotNull(posts))
+        if (StringUtils.isNotEmpty(posts))
         {
             // 新增用户与岗位管理
-            List<SysUserPost> list = new ArrayList<SysUserPost>();
+            List<SysUserPost> list = new ArrayList<SysUserPost>(posts.length);
             for (Long postId : posts)
             {
                 SysUserPost up = new SysUserPost();
@@ -419,10 +404,7 @@ public class SysUserServiceImpl implements ISysUserService
                 up.setPostId(postId);
                 list.add(up);
             }
-            if (list.size() > 0)
-            {
-                userPostMapper.batchUserPost(list);
-            }
+            userPostMapper.batchUserPost(list);
         }
     }
 
@@ -434,10 +416,10 @@ public class SysUserServiceImpl implements ISysUserService
      */
     public void insertUserRole(Long userId, Long[] roleIds)
     {
-        if (StringUtils.isNotNull(roleIds))
+        if (StringUtils.isNotEmpty(roleIds))
         {
             // 新增用户与角色管理
-            List<SysUserRole> list = new ArrayList<SysUserRole>();
+            List<SysUserRole> list = new ArrayList<SysUserRole>(roleIds.length);
             for (Long roleId : roleIds)
             {
                 SysUserRole ur = new SysUserRole();
@@ -445,10 +427,7 @@ public class SysUserServiceImpl implements ISysUserService
                 ur.setRoleId(roleId);
                 list.add(ur);
             }
-            if (list.size() > 0)
-            {
-                userRoleMapper.batchUserRole(list);
-            }
+            userRoleMapper.batchUserRole(list);
         }
     }
 
@@ -520,6 +499,8 @@ public class SysUserServiceImpl implements ISysUserService
                 if (StringUtils.isNull(u))
                 {
                     BeanValidators.validateWithException(validator, user);
+                    checkUserAllowed(user);
+                    checkUserDataScope(user.getUserId());
                     user.setPassword(SecurityUtils.encryptPassword(password));
                     user.setCreateBy(operName);
                     this.insertUser(user);

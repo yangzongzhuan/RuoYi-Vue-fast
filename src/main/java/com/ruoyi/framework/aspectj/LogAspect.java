@@ -14,8 +14,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.HandlerMapping;
-import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson2.JSON;
 import com.ruoyi.common.enums.HttpMethod;
+import com.ruoyi.common.filter.PropertyPreExcludeFilter;
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.common.utils.ServletUtils;
 import com.ruoyi.common.utils.StringUtils;
@@ -37,6 +38,9 @@ import com.ruoyi.project.monitor.domain.SysOperLog;
 public class LogAspect
 {
     private static final Logger log = LoggerFactory.getLogger(LogAspect.class);
+
+    /** 排除敏感属性字段 */
+    public static final String[] EXCLUDE_PROPERTIES = { "password", "oldPassword", "newPassword", "confirmPassword" };
 
     /**
      * 处理完请求后执行
@@ -65,7 +69,6 @@ public class LogAspect
     {
         try
         {
-
             // 获取当前的用户
             LoginUser loginUser = SecurityUtils.getLoginUser();
 
@@ -75,7 +78,7 @@ public class LogAspect
             // 请求的地址
             String ip = IpUtils.getIpAddr(ServletUtils.getRequest());
             operLog.setOperIp(ip);
-            operLog.setOperUrl(ServletUtils.getRequest().getRequestURI());
+            operLog.setOperUrl(StringUtils.substring(ServletUtils.getRequest().getRequestURI(), 0, 255));
             if (loginUser != null)
             {
                 operLog.setOperName(loginUser.getUsername());
@@ -100,7 +103,6 @@ public class LogAspect
         catch (Exception exp)
         {
             // 记录本地异常日志
-            log.error("==前置通知异常==");
             log.error("异常信息:{}", exp.getMessage());
             exp.printStackTrace();
         }
@@ -169,7 +171,7 @@ public class LogAspect
                 {
                     try
                     {
-                        Object jsonObj = JSON.toJSON(o);
+                        String jsonObj = JSON.toJSONString(o, excludePropertyPreFilter());
                         params += jsonObj.toString() + " ";
                     }
                     catch (Exception e)
@@ -179,6 +181,14 @@ public class LogAspect
             }
         }
         return params.trim();
+    }
+
+    /**
+     * 忽略敏感属性
+     */
+    public PropertyPreExcludeFilter excludePropertyPreFilter()
+    {
+        return new PropertyPreExcludeFilter().addExcludes(EXCLUDE_PROPERTIES);
     }
 
     /**

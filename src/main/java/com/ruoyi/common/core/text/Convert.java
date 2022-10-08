@@ -562,17 +562,12 @@ public class Convert
         switch (valueStr)
         {
             case "true":
-                return true;
-            case "false":
-                return false;
             case "yes":
-                return true;
             case "ok":
-                return true;
-            case "no":
-                return false;
             case "1":
                 return true;
+            case "false":
+            case "no":
             case "0":
                 return false;
             default:
@@ -899,7 +894,7 @@ public class Convert
      */
     public static String toSBC(String input, Set<Character> notConvertSet)
     {
-        char c[] = input.toCharArray();
+        char[] c = input.toCharArray();
         for (int i = 0; i < c.length; i++)
         {
             if (null != notConvertSet && notConvertSet.contains(c[i]))
@@ -941,7 +936,7 @@ public class Convert
      */
     public static String toDBC(String text, Set<Character> notConvertSet)
     {
-        char c[] = text.toCharArray();
+        char[] c = text.toCharArray();
         for (int i = 0; i < c.length; i++)
         {
             if (null != notConvertSet && notConvertSet.contains(c[i]))

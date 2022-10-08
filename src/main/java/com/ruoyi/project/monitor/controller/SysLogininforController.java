@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.framework.aspectj.lang.annotation.Log;
 import com.ruoyi.framework.aspectj.lang.enums.BusinessType;
+import com.ruoyi.framework.security.service.SysPasswordService;
 import com.ruoyi.framework.web.controller.BaseController;
 import com.ruoyi.framework.web.domain.AjaxResult;
 import com.ruoyi.framework.web.page.TableDataInfo;
@@ -30,6 +31,9 @@ public class SysLogininforController extends BaseController
 {
     @Autowired
     private ISysLogininforService logininforService;
+
+    @Autowired
+    private SysPasswordService passwordService;
 
     @PreAuthorize("@ss.hasPermi('monitor:logininfor:list')")
     @GetMapping("/list")
@@ -64,6 +68,15 @@ public class SysLogininforController extends BaseController
     public AjaxResult clean()
     {
         logininforService.cleanLogininfor();
-        return AjaxResult.success();
+        return success();
+    }
+
+    @PreAuthorize("@ss.hasPermi('monitor:logininfor:unlock')")
+    @Log(title = "账户解锁", businessType = BusinessType.OTHER)
+    @GetMapping("/unlock/{userName}")
+    public AjaxResult unlock(@PathVariable("userName") String userName)
+    {
+        passwordService.clearLoginRecordCache(userName);
+        return success();
     }
 }

@@ -3,7 +3,7 @@ ruoyi:
   # 名称
   name: RuoYi
   # 版本
-  version: 3.8.1
+  version: 3.8.4
   # 版权年份
   copyrightYear: 2022
   # 实例演示开关
@@ -38,6 +38,14 @@ logging:
   level:
     com.ruoyi: debug
     org.springframework: warn
+
+# 用户配置
+user:
+  password:
+    # 密码最大错误次数
+    maxRetryCount: 5
+    # 密码锁定时间（默认10分钟）
+    lockTime: 10
 
 # Spring配置
 spring:

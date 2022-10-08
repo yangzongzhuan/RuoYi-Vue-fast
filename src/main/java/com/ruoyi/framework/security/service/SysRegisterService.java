@@ -2,6 +2,7 @@ package com.ruoyi.framework.security.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import com.ruoyi.common.constant.CacheConstants;
 import com.ruoyi.common.constant.Constants;
 import com.ruoyi.common.constant.UserConstants;
 import com.ruoyi.common.exception.user.CaptchaException;
@@ -40,10 +41,12 @@ public class SysRegisterService
     public String register(RegisterBody registerBody)
     {
         String msg = "", username = registerBody.getUsername(), password = registerBody.getPassword();
+        SysUser sysUser = new SysUser();
+        sysUser.setUserName(username);
 
-        boolean captchaOnOff = configService.selectCaptchaOnOff();
         // 验证码开关
-        if (captchaOnOff)
+        boolean captchaEnabled = configService.selectCaptchaEnabled();
+        if (captchaEnabled)
         {
             validateCaptcha(username, registerBody.getCode(), registerBody.getUuid());
         }
@@ -66,16 +69,14 @@ public class SysRegisterService
         {
             msg = "密码长度必须在5到20个字符之间";
         }
-        else if (UserConstants.NOT_UNIQUE.equals(userService.checkUserNameUnique(username)))
+        else if (UserConstants.NOT_UNIQUE.equals(userService.checkUserNameUnique(sysUser)))
         {
             msg = "保存用户'" + username + "'失败，注册账号已存在";
         }
         else
         {
-            SysUser sysUser = new SysUser();
-            sysUser.setUserName(username);
             sysUser.setNickName(username);
-            sysUser.setPassword(SecurityUtils.encryptPassword(registerBody.getPassword()));
+            sysUser.setPassword(SecurityUtils.encryptPassword(password));
             boolean regFlag = userService.registerUser(sysUser);
             if (!regFlag)
             {
@@ -83,8 +84,7 @@ public class SysRegisterService
             }
             else
             {
-                AsyncManager.me().execute(AsyncFactory.recordLogininfor(username, Constants.REGISTER,
-                        MessageUtils.message("user.register.success")));
+                AsyncManager.me().execute(AsyncFactory.recordLogininfor(username, Constants.REGISTER, MessageUtils.message("user.register.success")));
             }
         }
         return msg;
@@ -100,7 +100,7 @@ public class SysRegisterService
      */
     public void validateCaptcha(String username, String code, String uuid)
     {
-        String verifyKey = Constants.CAPTCHA_CODE_KEY + StringUtils.nvl(uuid, "");
+        String verifyKey = CacheConstants.CAPTCHA_CODE_KEY + StringUtils.nvl(uuid, "");
         String captcha = redisCache.getCacheObject(verifyKey);
         redisCache.deleteObject(verifyKey);
         if (captcha == null)

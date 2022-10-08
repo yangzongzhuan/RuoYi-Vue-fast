@@ -59,8 +59,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</select>
     
     <select id="selectDeptById" parameterType="Long" resultMap="SysDeptResult">
-		<include refid="selectDeptVo"/>
-		where dept_id = #{deptId}
+		select d.dept_id, d.parent_id, d.ancestors, d.dept_name, d.order_num, d.leader, d.phone, d.email, d.status,
+			(select dept_name from sys_dept where dept_id = d.parent_id) parent_name
+		from sys_dept d
+		where d.dept_id = #{deptId}
 	</select>
     
     <select id="checkDeptExistUser" parameterType="Long" resultType="int">
@@ -82,7 +84,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	
 	<select id="checkDeptNameUnique" resultMap="SysDeptResult">
 	    <include refid="selectDeptVo"/>
-		where dept_name=#{deptName} and parent_id = #{parentId} limit 1
+		where dept_name=#{deptName} and parent_id = #{parentId} and del_flag = '0' limit 1
 	</select>
     
     <insert id="insertDept" parameterType="SysDept">
@@ -91,7 +93,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
  			<if test="parentId != null and parentId != 0">parent_id,</if>
  			<if test="deptName != null and deptName != ''">dept_name,</if>
  			<if test="ancestors != null and ancestors != ''">ancestors,</if>
- 			<if test="orderNum != null and orderNum != ''">order_num,</if>
+ 			<if test="orderNum != null">order_num,</if>
  			<if test="leader != null and leader != ''">leader,</if>
  			<if test="phone != null and phone != ''">phone,</if>
  			<if test="email != null and email != ''">email,</if>
@@ -103,7 +105,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
  			<if test="parentId != null and parentId != 0">#{parentId},</if>
  			<if test="deptName != null and deptName != ''">#{deptName},</if>
  			<if test="ancestors != null and ancestors != ''">#{ancestors},</if>
- 			<if test="orderNum != null and orderNum != ''">#{orderNum},</if>
+ 			<if test="orderNum != null">#{orderNum},</if>
  			<if test="leader != null and leader != ''">#{leader},</if>
  			<if test="phone != null and phone != ''">#{phone},</if>
  			<if test="email != null and email != ''">#{email},</if>
@@ -119,7 +121,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
  			<if test="parentId != null and parentId != 0">parent_id = #{parentId},</if>
  			<if test="deptName != null and deptName != ''">dept_name = #{deptName},</if>
  			<if test="ancestors != null and ancestors != ''">ancestors = #{ancestors},</if>
- 			<if test="orderNum != null and orderNum != ''">order_num = #{orderNum},</if>
+ 			<if test="orderNum != null">order_num = #{orderNum},</if>
  			<if test="leader != null">leader = #{leader},</if>
  			<if test="phone != null">phone = #{phone},</if>
  			<if test="email != null">email = #{email},</if>

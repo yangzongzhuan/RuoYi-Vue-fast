@@ -76,14 +76,23 @@
           v-hasPermi="['${moduleName}:${businessName}:add']"
         >新增</el-button>
       </el-col>
+      <el-col :span="1.5">
+        <el-button
+          type="info"
+          plain
+          icon="Sort"
+          @click="toggleExpandAll"
+        >展开/折叠</el-button>
+      </el-col>
       <right-toolbar v-model:showSearch="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
     <el-table
+      v-if="refreshTable"
       v-loading="loading"
       :data="${businessName}List"
       row-key="${treeCode}"
-      default-expand-all
+      :default-expand-all="isExpandAll"
       :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
     >
 #foreach($column in $columns)
@@ -165,11 +174,13 @@
 #set($dictType=$column.dictType)
 #if("" != $treeParentCode && $column.javaField == $treeParentCode)
         <el-form-item label="${comment}" prop="${treeParentCode}">
-          <tree-select
-            v-model:value="form.${treeParentCode}"
-            :options="${businessName}Options"
-            :objMap="{ value: '${treeCode}', label: '${treeName}', children: 'children' }"
+          <el-tree-select
+            v-model="form.${treeParentCode}"
+            :data="${businessName}Options"
+            :props="{ value: '${treeCode}', label: '${treeName}', children: 'children' }"
+            value-key="${treeCode}"
             placeholder="请选择${comment}"
+            check-strictly
           />
         </el-form-item>
 #elseif($column.htmlType == "input")
@@ -283,6 +294,8 @@ const open = ref(false);
 const loading = ref(true);
 const showSearch = ref(true);
 const title = ref("");
+const isExpandAll = ref(true);
+const refreshTable = ref(true);
 #foreach ($column in $columns)
 #if($column.htmlType == "datetime" && $column.queryType == "BETWEEN")
 #set($AttrName=$column.javaField.substring(0,1).toUpperCase() + ${column.javaField.substring(1)})
@@ -343,8 +356,8 @@ function getList() {
 }
 
 /** 查询${functionName}下拉树结构 */
-async function getTreeselect() {
-  await list${BusinessName}().then(response => {
+function getTreeselect() {
+  list${BusinessName}().then(response => {
     ${businessName}Options.value = [];
     const data = { ${treeCode}: 0, ${treeName}: '顶级节点', children: [] };
     data.children = proxy.handleTree(response.data, "${treeCode}", "${treeParentCode}");
@@ -393,9 +406,9 @@ function resetQuery() {
 }
 
 /** 新增按钮操作 */
-async function handleAdd(row) {
+function handleAdd(row) {
   reset();
-  await getTreeselect();
+  getTreeselect();
   if (row != null && row.${treeCode}) {
     form.value.${treeParentCode} = row.${treeCode};
   } else {
@@ -403,6 +416,15 @@ async function handleAdd(row) {
   }
   open.value = true;
   title.value = "添加${functionName}";
+}
+
+/** 展开/折叠操作 */
+function toggleExpandAll() {
+  refreshTable.value = false;
+  isExpandAll.value = !isExpandAll.value;
+  nextTick(() => {
+    refreshTable.value = true;
+  });
 }
 
 /** 修改按钮操作 */
