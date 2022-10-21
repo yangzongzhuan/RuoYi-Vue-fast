@@ -102,6 +102,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
         httpSecurity
                 // CSRF禁用，因为不使用session
                 .csrf().disable()
+                // 禁用HTTP响应标头
+                .headers().cacheControl().disable().and()
                 // 认证失败处理类
                 .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
                 // 基于token，所以不需要session
