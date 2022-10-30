@@ -99,14 +99,6 @@ public class BaseController
     }
 
     /**
-     * 返回失败消息
-     */
-    public AjaxResult error()
-    {
-        return AjaxResult.error();
-    }
-
-    /**
      * 返回成功消息
      */
     public AjaxResult success(String message)
@@ -115,11 +107,35 @@ public class BaseController
     }
 
     /**
+     * 返回成功消息
+     */
+    public AjaxResult success(Object data)
+    {
+        return AjaxResult.success(data);
+    }
+
+    /**
+     * 返回失败消息
+     */
+    public AjaxResult error()
+    {
+        return AjaxResult.error();
+    }
+
+    /**
      * 返回失败消息
      */
     public AjaxResult error(String message)
     {
         return AjaxResult.error(message);
+    }
+
+    /**
+     * 返回警告消息
+     */
+    public AjaxResult warn(String message)
+    {
+        return AjaxResult.warn(message);
     }
 
     /**
