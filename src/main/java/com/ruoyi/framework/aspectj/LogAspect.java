@@ -13,7 +13,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.HandlerMapping;
 import com.alibaba.fastjson2.JSON;
 import com.ruoyi.common.enums.HttpMethod;
 import com.ruoyi.common.filter.PropertyPreExcludeFilter;
@@ -152,8 +151,8 @@ public class LogAspect
         }
         else
         {
-            Map<?, ?> paramsMap = (Map<?, ?>) ServletUtils.getRequest().getAttribute(HandlerMapping.URI_TEMPLATE_VARIABLES_ATTRIBUTE);
-            operLog.setOperParam(StringUtils.substring(paramsMap.toString(), 0, 2000));
+            Map<?, ?> paramsMap = ServletUtils.getParamMap(ServletUtils.getRequest());
+            operLog.setOperParam(StringUtils.substring(JSON.toJSONString(paramsMap, excludePropertyPreFilter()), 0, 2000));
         }
     }
 
