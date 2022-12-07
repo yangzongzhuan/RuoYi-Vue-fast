@@ -27,7 +27,7 @@
         <mybatis.spring.boot.starter.version>2.2.2</mybatis.spring.boot.starter.version>
         <pagehelper.spring.boot.starter.version>1.4.5</pagehelper.spring.boot.starter.version>
         <fastjson.version>2.0.16</fastjson.version>
-        <druid.version>1.2.14</druid.version>
+        <druid.version>1.2.15</druid.version>
         <commons.io.version>2.11.0</commons.io.version>
         <commons.fileupload.version>1.4</commons.fileupload.version>
         <commons.collections.version>3.2.2</commons.collections.version>
