@@ -134,7 +134,7 @@ public class SysConfigServiceImpl implements ISysConfigService
         SysConfig temp = configMapper.selectConfigById(config.getConfigId());
         if (!StringUtils.equals(temp.getConfigKey(), config.getConfigKey()))
         {
-            redisCache.deleteObject(getCacheKey(config.getConfigKey()));
+            redisCache.deleteObject(getCacheKey(temp.getConfigKey()));
         }
 
         int row = configMapper.updateConfig(config);
