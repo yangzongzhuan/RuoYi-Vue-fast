@@ -177,7 +177,17 @@ public class AjaxResult extends HashMap<String, Object>
      */
     public boolean isSuccess()
     {
-        return !isError();
+        return Objects.equals(HttpStatus.SUCCESS, this.get(CODE_TAG));
+    }
+
+    /**
+     * 是否为警告消息
+     *
+     * @return 结果
+     */
+    public boolean isWarn()
+    {
+        return Objects.equals(HttpStatus.WARN, this.get(CODE_TAG));
     }
 
     /**
