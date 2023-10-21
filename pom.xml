@@ -34,7 +34,7 @@
         <kaptcha.version>2.3.3</kaptcha.version>
         <swagger.version>3.0.0</swagger.version>
         <poi.version>4.1.2</poi.version>
-        <oshi.version>6.4.4</oshi.version>
+        <oshi.version>6.4.6</oshi.version>
         <velocity.version>2.3</velocity.version>
     </properties>
 
