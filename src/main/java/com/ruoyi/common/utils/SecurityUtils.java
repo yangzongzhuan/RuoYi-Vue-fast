@@ -20,7 +20,6 @@ import com.ruoyi.project.system.domain.SysRole;
  */
 public class SecurityUtils
 {
-
     /**
      * 用户ID
      **/
@@ -146,7 +145,7 @@ public class SecurityUtils
     public static boolean hasPermi(Collection<String> authorities, String permission)
     {
         return authorities.stream().filter(StringUtils::hasText)
-                .anyMatch(x -> Constants.ALL_PERMISSION.contains(x) || PatternMatchUtils.simpleMatch(x, permission));
+                .anyMatch(x -> Constants.ALL_PERMISSION.equals(x) || PatternMatchUtils.simpleMatch(x, permission));
     }
 
     /**
@@ -172,6 +171,6 @@ public class SecurityUtils
     public static boolean hasRole(Collection<String> roles, String role)
     {
         return roles.stream().filter(StringUtils::hasText)
-                .anyMatch(x -> Constants.SUPER_ADMIN.contains(x) || PatternMatchUtils.simpleMatch(x, role));
+                .anyMatch(x -> Constants.SUPER_ADMIN.equals(x) || PatternMatchUtils.simpleMatch(x, role));
     }
 }
