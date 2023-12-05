@@ -29,6 +29,7 @@ import com.ruoyi.framework.manager.AsyncManager;
 import com.ruoyi.framework.manager.factory.AsyncFactory;
 import com.ruoyi.framework.security.LoginUser;
 import com.ruoyi.project.monitor.domain.SysOperLog;
+import com.ruoyi.project.system.domain.SysUser;
 
 /**
  * 操作日志记录处理
@@ -96,6 +97,11 @@ public class LogAspect
             if (loginUser != null)
             {
                 operLog.setOperName(loginUser.getUsername());
+                SysUser currentUser = loginUser.getUser();
+                if (StringUtils.isNotNull(currentUser) && StringUtils.isNotNull(currentUser.getDept()))
+                {
+                    operLog.setDeptName(currentUser.getDept().getDeptName());
+                }
             }
 
             if (e != null)
