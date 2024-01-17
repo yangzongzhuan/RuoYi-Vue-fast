@@ -16,7 +16,7 @@ ruoyi:
 # 开发环境配置
 server:
   # 服务器的HTTP端口，默认为8080
-  port: 8080
+  port: 3000
   servlet:
     # 应用的访问路径
     context-path: /
@@ -95,7 +95,7 @@ token:
   # 令牌密钥
   secret: abcdefghijklmnopqrstuvwxyz
   # 令牌有效期（默认30分钟）
-  expireTime: 30
+  expireTime: 60
   
 # MyBatis配置
 mybatis:
@@ -133,8 +133,8 @@ gen:
   # 作者
   author: ruoyi
   # 默认生成包路径 system 需改成自己的模块名称 如 system monitor tool
-  packageName: com.ruoyi.project.system
+  packageName: com.ruoyi.project.gallery
   # 自动去除表前缀，默认是true
   autoRemovePre: false
   # 表前缀（生成类名不会包含表前缀，多个用逗号分隔）
-  tablePrefix: sys_
+  tablePrefix: gallery_
