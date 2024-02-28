@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.gallery.mapper.GalleryImageMapper">
+    
+    <resultMap type="GalleryImage" id="GalleryImageResult">
+        <result property="fileId"    column="file_id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="userName"    column="user_name"    />
+        <result property="userAvatar"    column="user_avatar"    />
+        <result property="fileName"    column="file_name"    />
+        <result property="fileType"    column="file_type"    />
+        <result property="fileSuffix"    column="file_suffix"    />
+        <result property="filePath"    column="file_path"    />
+        <result property="fileOrigin"    column="file_origin"    />
+        <result property="fileWidth"    column="file_width"    />
+        <result property="fileHeight"    column="file_height"    />
+        <result property="fileSize"    column="file_size"    />
+        <result property="fileLikeCount"    column="file_like_count"    />
+        <result property="fileCollectCount"    column="file_collect_count"    />
+        <result property="fileDownCount"    column="file_down_count"    />
+        <result property="fileDate"    column="file_date"    />
+        <result property="fileShow"    column="file_show"    />
+        <result property="fileReview"    column="file_review"    />
+        <result property="fileStatus"    column="file_status"    />
+        <result property="fileDelete"    column="file_delete"    />
+    </resultMap>
+
+    <sql id="selectGalleryImageVo">
+        select file_id, user_id, user_name, user_avatar, file_name, file_type, file_suffix, file_path, file_origin, file_width, file_height, file_size, file_like_count, file_collect_count, file_down_count, file_date, file_show, file_review, file_status, file_delete from gallery_image
+    </sql>
+
+    <select id="selectGalleryImageList" parameterType="GalleryImage" resultMap="GalleryImageResult">
+        <include refid="selectGalleryImageVo"/>
+        <where>  
+            <if test="userName != null  and userName != ''"> and user_name like concat('%', #{userName}, '%')</if>
+            <if test="fileType != null  and fileType != ''"> and file_type = #{fileType}</if>
+            <if test="params.beginFileDate != null and params.beginFileDate != '' and params.endFileDate != null and params.endFileDate != ''"> and file_date between #{params.beginFileDate} and #{params.endFileDate}</if>
+            <if test="fileReview != null "> and file_review = #{fileReview}</if>
+        </where>
+    </select>
+    
+    <select id="selectGalleryImageByFileId" parameterType="Long" resultMap="GalleryImageResult">
+        <include refid="selectGalleryImageVo"/>
+        where file_id = #{fileId}
+    </select>
+        
+    <insert id="insertGalleryImage" parameterType="GalleryImage" useGeneratedKeys="true" keyProperty="fileId">
+        insert into gallery_image
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">user_id,</if>
+            <if test="userName != null">user_name,</if>
+            <if test="userAvatar != null">user_avatar,</if>
+            <if test="fileName != null">file_name,</if>
+            <if test="fileType != null">file_type,</if>
+            <if test="fileSuffix != null">file_suffix,</if>
+            <if test="filePath != null">file_path,</if>
+            <if test="fileOrigin != null">file_origin,</if>
+            <if test="fileWidth != null">file_width,</if>
+            <if test="fileHeight != null">file_height,</if>
+            <if test="fileSize != null">file_size,</if>
+            <if test="fileLikeCount != null">file_like_count,</if>
+            <if test="fileCollectCount != null">file_collect_count,</if>
+            <if test="fileDownCount != null">file_down_count,</if>
+            <if test="fileDate != null">file_date,</if>
+            <if test="fileShow != null">file_show,</if>
+            <if test="fileReview != null">file_review,</if>
+            <if test="fileStatus != null">file_status,</if>
+            <if test="fileDelete != null">file_delete,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null">#{userId},</if>
+            <if test="userName != null">#{userName},</if>
+            <if test="userAvatar != null">#{userAvatar},</if>
+            <if test="fileName != null">#{fileName},</if>
+            <if test="fileType != null">#{fileType},</if>
+            <if test="fileSuffix != null">#{fileSuffix},</if>
+            <if test="filePath != null">#{filePath},</if>
+            <if test="fileOrigin != null">#{fileOrigin},</if>
+            <if test="fileWidth != null">#{fileWidth},</if>
+            <if test="fileHeight != null">#{fileHeight},</if>
+            <if test="fileSize != null">#{fileSize},</if>
+            <if test="fileLikeCount != null">#{fileLikeCount},</if>
+            <if test="fileCollectCount != null">#{fileCollectCount},</if>
+            <if test="fileDownCount != null">#{fileDownCount},</if>
+            <if test="fileDate != null">#{fileDate},</if>
+            <if test="fileShow != null">#{fileShow},</if>
+            <if test="fileReview != null">#{fileReview},</if>
+            <if test="fileStatus != null">#{fileStatus},</if>
+            <if test="fileDelete != null">#{fileDelete},</if>
+         </trim>
+    </insert>
+
+    <update id="updateGalleryImage" parameterType="GalleryImage">
+        update gallery_image
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="userName != null">user_name = #{userName},</if>
+            <if test="userAvatar != null">user_avatar = #{userAvatar},</if>
+            <if test="fileName != null">file_name = #{fileName},</if>
+            <if test="fileType != null">file_type = #{fileType},</if>
+            <if test="fileSuffix != null">file_suffix = #{fileSuffix},</if>
+            <if test="filePath != null">file_path = #{filePath},</if>
+            <if test="fileOrigin != null">file_origin = #{fileOrigin},</if>
+            <if test="fileWidth != null">file_width = #{fileWidth},</if>
+            <if test="fileHeight != null">file_height = #{fileHeight},</if>
+            <if test="fileSize != null">file_size = #{fileSize},</if>
+            <if test="fileLikeCount != null">file_like_count = #{fileLikeCount},</if>
+            <if test="fileCollectCount != null">file_collect_count = #{fileCollectCount},</if>
+            <if test="fileDownCount != null">file_down_count = #{fileDownCount},</if>
+            <if test="fileDate != null">file_date = #{fileDate},</if>
+            <if test="fileShow != null">file_show = #{fileShow},</if>
+            <if test="fileReview != null">file_review = #{fileReview},</if>
+            <if test="fileStatus != null">file_status = #{fileStatus},</if>
+            <if test="fileDelete != null">file_delete = #{fileDelete},</if>
+        </trim>
+        where file_id = #{fileId}
+    </update>
+
+    <delete id="deleteGalleryImageByFileId" parameterType="Long">
+        delete from gallery_image where file_id = #{fileId}
+    </delete>
+
+    <delete id="deleteGalleryImageByFileIds" parameterType="String">
+        delete from gallery_image where file_id in 
+        <foreach item="fileId" collection="array" open="(" separator="," close=")">
+            #{fileId}
+        </foreach>
+    </delete>
+</mapper>
