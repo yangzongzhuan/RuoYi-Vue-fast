@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.gallery.mapper.GalleryUserMapper">
+    
+    <resultMap type="GalleryUser" id="GalleryUserResult">
+        <result property="userId"    column="user_id"    />
+        <result property="userUnionid"    column="user_unionid"    />
+        <result property="userIntegral"    column="user_integral"    />
+        <result property="userName"    column="user_name"    />
+        <result property="userAccount"    column="user_account"    />
+        <result property="userPassword"    column="user_password"    />
+        <result property="userAvatar"    column="user_avatar"    />
+        <result property="userEmail"    column="user_email"    />
+        <result property="userQq"    column="user_qq"    />
+        <result property="userSex"    column="user_sex"    />
+        <result property="userCollect"    column="user_collect"    />
+        <result property="userDownCount"    column="user_down_count"    />
+        <result property="userUploadCount"    column="user_upload_count"    />
+        <result property="createDate"    column="create_time"    />
+        <result property="updateDate"    column="update_time"    />
+        <result property="userStatus"    column="user_status"    />
+        <result property="userAccountNumber"    column="user_account_number"    />
+    </resultMap>
+
+    <sql id="selectGalleryUserVo">
+        select user_id, user_unionid, user_integral, user_name, user_account, user_password, user_avatar, user_email, user_qq, user_sex, user_collect, user_down_count, user_upload_count, create_time, update_time, user_status, user_account_number from gallery_user
+    </sql>
+
+    <select id="selectGalleryUserList" parameterType="GalleryUser" resultMap="GalleryUserResult">
+        <include refid="selectGalleryUserVo"/>
+        <where>  
+            <if test="userName != null  and userName != ''"> and user_name like concat('%', #{userName}, '%')</if>
+            <if test="userQq != null  and userQq != ''"> and user_qq = #{userQq}</if>
+            <if test="params.beginCreateDate != null and params.beginCreateDate != '' and params.endCreateDate != null and params.endCreateDate != ''"> and create_time between #{params.beginCreateDate} and #{params.endCreateDate}</if>
+            <if test="userStatus != null "> and user_status = #{userStatus}</if>
+        </where>
+    </select>
+    
+    <select id="selectGalleryUserByUserId" parameterType="Long" resultMap="GalleryUserResult">
+        <include refid="selectGalleryUserVo"/>
+        where user_id = #{userId}
+    </select>
+        
+    <insert id="insertGalleryUser" parameterType="GalleryUser" useGeneratedKeys="true" keyProperty="userId">
+        insert into gallery_user
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userUnionid != null">user_unionid,</if>
+            <if test="userIntegral != null">user_integral,</if>
+            <if test="userName != null and userName != ''">user_name,</if>
+            <if test="userAccount != null and userAccount != ''">user_account,</if>
+            <if test="userPassword != null and userPassword != ''">user_password,</if>
+            <if test="userAvatar != null and userAvatar != ''">user_avatar,</if>
+            <if test="userEmail != null">user_email,</if>
+            <if test="userQq != null">user_qq,</if>
+            <if test="userSex != null">user_sex,</if>
+            <if test="userCollect != null">user_collect,</if>
+            <if test="userDownCount != null">user_down_count,</if>
+            <if test="userUploadCount != null">user_upload_count,</if>
+            <if test="createDate != null">create_time,</if>
+            <if test="updateDate != null">update_time,</if>
+            <if test="userStatus != null">user_status,</if>
+            <if test="userAccountNumber != null">user_account_number,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userUnionid != null">#{userUnionid},</if>
+            <if test="userIntegral != null">#{userIntegral},</if>
+            <if test="userName != null and userName != ''">#{userName},</if>
+            <if test="userAccount != null and userAccount != ''">#{userAccount},</if>
+            <if test="userPassword != null and userPassword != ''">#{userPassword},</if>
+            <if test="userAvatar != null and userAvatar != ''">#{userAvatar},</if>
+            <if test="userEmail != null">#{userEmail},</if>
+            <if test="userQq != null">#{userQq},</if>
+            <if test="userSex != null">#{userSex},</if>
+            <if test="userCollect != null">#{userCollect},</if>
+            <if test="userDownCount != null">#{userDownCount},</if>
+            <if test="userUploadCount != null">#{userUploadCount},</if>
+            <if test="createDate != null">#{createDate},</if>
+            <if test="updateDate != null">#{updateDate},</if>
+            <if test="userStatus != null">#{userStatus},</if>
+            <if test="userAccountNumber != null">#{userAccountNumber},</if>
+         </trim>
+    </insert>
+
+    <update id="updateGalleryUser" parameterType="GalleryUser">
+        update gallery_user
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userUnionid != null">user_unionid = #{userUnionid},</if>
+            <if test="userIntegral != null">user_integral = #{userIntegral},</if>
+            <if test="userName != null and userName != ''">user_name = #{userName},</if>
+            <if test="userAccount != null and userAccount != ''">user_account = #{userAccount},</if>
+            <if test="userPassword != null and userPassword != ''">user_password = #{userPassword},</if>
+            <if test="userAvatar != null and userAvatar != ''">user_avatar = #{userAvatar},</if>
+            <if test="userEmail != null">user_email = #{userEmail},</if>
+            <if test="userQq != null">user_qq = #{userQq},</if>
+            <if test="userSex != null">user_sex = #{userSex},</if>
+            <if test="userCollect != null">user_collect = #{userCollect},</if>
+            <if test="userDownCount != null">user_down_count = #{userDownCount},</if>
+            <if test="userUploadCount != null">user_upload_count = #{userUploadCount},</if>
+            <if test="createDate != null">create_time = #{createDate},</if>
+            <if test="updateDate != null">update_time = #{updateDate},</if>
+            <if test="userStatus != null">user_status = #{userStatus},</if>
+            <if test="userAccountNumber != null">user_account_number = #{userAccountNumber},</if>
+        </trim>
+        where user_id = #{userId}
+    </update>
+
+    <delete id="deleteGalleryUserByUserId" parameterType="Long">
+        delete from gallery_user where user_id = #{userId}
+    </delete>
+
+    <delete id="deleteGalleryUserByUserIds" parameterType="String">
+        delete from gallery_user where user_id in 
+        <foreach item="userId" collection="array" open="(" separator="," close=")">
+            #{userId}
+        </foreach>
+    </delete>
+</mapper>
