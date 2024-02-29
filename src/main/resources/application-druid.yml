@@ -47,8 +47,8 @@ spring:
                 allow:
                 url-pattern: /druid/*
                 # 控制台管理用户名和密码
-                login-username: elaina
-                login-password: elaina2001
+                login-username: ogcfun
+                login-password: ogcfun
             filter:
                 stat:
                     enabled: true
