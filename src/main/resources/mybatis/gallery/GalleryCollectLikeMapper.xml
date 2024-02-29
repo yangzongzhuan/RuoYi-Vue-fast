@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.gallery.mapper.GalleryCollectLikeMapper">
+    
+    <resultMap type="GalleryCollectLike" id="GalleryCollectLikeResult">
+        <result property="id"    column="id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="fileId"    column="file_id"    />
+        <result property="isCollected"    column="is_collected"    />
+        <result property="isLiked"    column="is_liked"    />
+        <result property="createDate"    column="create_date"    />
+        <result property="updateDate"    column="update_date"    />
+    </resultMap>
+
+    <sql id="selectGalleryCollectLikeVo">
+        select id, user_id, file_id, is_collected, is_liked, create_date, update_date from gallery_collect_like
+    </sql>
+
+    <select id="selectGalleryCollectLikeList" parameterType="GalleryCollectLike" resultMap="GalleryCollectLikeResult">
+        <include refid="selectGalleryCollectLikeVo"/>
+        <where>  
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="fileId != null "> and file_id = #{fileId}</if>
+            <if test="params.beginCreateDate != null and params.beginCreateDate != '' and params.endCreateDate != null and params.endCreateDate != ''"> and create_date between #{params.beginCreateDate} and #{params.endCreateDate}</if>
+            <if test="params.beginUpdateDate != null and params.beginUpdateDate != '' and params.endUpdateDate != null and params.endUpdateDate != ''"> and update_date between #{params.beginUpdateDate} and #{params.endUpdateDate}</if>
+        </where>
+    </select>
+    
+    <select id="selectGalleryCollectLikeById" parameterType="Long" resultMap="GalleryCollectLikeResult">
+        <include refid="selectGalleryCollectLikeVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertGalleryCollectLike" parameterType="GalleryCollectLike" useGeneratedKeys="true" keyProperty="id">
+        insert into gallery_collect_like
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">user_id,</if>
+            <if test="fileId != null">file_id,</if>
+            <if test="isCollected != null">is_collected,</if>
+            <if test="isLiked != null">is_liked,</if>
+            <if test="createDate != null">create_date,</if>
+            <if test="updateDate != null">update_date,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null">#{userId},</if>
+            <if test="fileId != null">#{fileId},</if>
+            <if test="isCollected != null">#{isCollected},</if>
+            <if test="isLiked != null">#{isLiked},</if>
+            <if test="createDate != null">#{createDate},</if>
+            <if test="updateDate != null">#{updateDate},</if>
+         </trim>
+    </insert>
+
+    <update id="updateGalleryCollectLike" parameterType="GalleryCollectLike">
+        update gallery_collect_like
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="fileId != null">file_id = #{fileId},</if>
+            <if test="isCollected != null">is_collected = #{isCollected},</if>
+            <if test="isLiked != null">is_liked = #{isLiked},</if>
+            <if test="createDate != null">create_date = #{createDate},</if>
+            <if test="updateDate != null">update_date = #{updateDate},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteGalleryCollectLikeById" parameterType="Long">
+        delete from gallery_collect_like where id = #{id}
+    </delete>
+
+    <delete id="deleteGalleryCollectLikeByIds" parameterType="String">
+        delete from gallery_collect_like where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
