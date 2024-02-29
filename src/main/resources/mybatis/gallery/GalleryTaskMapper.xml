@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.gallery.mapper.GalleryTaskMapper">
+    
+    <resultMap type="GalleryTask" id="GalleryTaskResult">
+        <result property="taskId"    column="task_id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="taskLikeCount"    column="task_like_count"    />
+        <result property="taskSignIn"    column="task_sign_in"    />
+        <result property="taskAward"    column="task_award"    />
+        <result property="taskDate"    column="task_date"    />
+    </resultMap>
+
+    <sql id="selectGalleryTaskVo">
+        select task_id, user_id, task_like_count, task_sign_in, task_award, task_date from gallery_task
+    </sql>
+
+    <select id="selectGalleryTaskList" parameterType="GalleryTask" resultMap="GalleryTaskResult">
+        <include refid="selectGalleryTaskVo"/>
+        <where>  
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="taskSignIn != null "> and task_sign_in = #{taskSignIn}</if>
+            <if test="taskAward != null "> and task_award = #{taskAward}</if>
+        </where>
+    </select>
+    
+    <select id="selectGalleryTaskByTaskId" parameterType="Long" resultMap="GalleryTaskResult">
+        <include refid="selectGalleryTaskVo"/>
+        where task_id = #{taskId}
+    </select>
+        
+    <insert id="insertGalleryTask" parameterType="GalleryTask" useGeneratedKeys="true" keyProperty="taskId">
+        insert into gallery_task
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">user_id,</if>
+            <if test="taskLikeCount != null">task_like_count,</if>
+            <if test="taskSignIn != null">task_sign_in,</if>
+            <if test="taskAward != null">task_award,</if>
+            <if test="taskDate != null">task_date,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null">#{userId},</if>
+            <if test="taskLikeCount != null">#{taskLikeCount},</if>
+            <if test="taskSignIn != null">#{taskSignIn},</if>
+            <if test="taskAward != null">#{taskAward},</if>
+            <if test="taskDate != null">#{taskDate},</if>
+         </trim>
+    </insert>
+
+    <update id="updateGalleryTask" parameterType="GalleryTask">
+        update gallery_task
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="taskLikeCount != null">task_like_count = #{taskLikeCount},</if>
+            <if test="taskSignIn != null">task_sign_in = #{taskSignIn},</if>
+            <if test="taskAward != null">task_award = #{taskAward},</if>
+            <if test="taskDate != null">task_date = #{taskDate},</if>
+        </trim>
+        where task_id = #{taskId}
+    </update>
+
+    <delete id="deleteGalleryTaskByTaskId" parameterType="Long">
+        delete from gallery_task where task_id = #{taskId}
+    </delete>
+
+    <delete id="deleteGalleryTaskByTaskIds" parameterType="String">
+        delete from gallery_task where task_id in 
+        <foreach item="taskId" collection="array" open="(" separator="," close=")">
+            #{taskId}
+        </foreach>
+    </delete>
+</mapper>

@@ -131,7 +131,7 @@ xss:
 # 代码生成
 gen:
   # 作者
-  author: ruoyi
+  author: ogcfun
   # 默认生成包路径 system 需改成自己的模块名称 如 system monitor tool
   packageName: com.ruoyi.project.gallery
   # 自动去除表前缀，默认是true
