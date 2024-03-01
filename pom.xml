@@ -8,9 +8,9 @@
     <version>3.8.7</version>
     <packaging>jar</packaging>
 
-    <name>ruoyi</name>
-    <url>http://www.ruoyi.vip</url>
-    <description>若依管理系统</description>
+    <name>ogcfun</name>
+    <url>https://www.ogcfun.top</url>
+    <description>OGC管理系统</description>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -228,7 +228,46 @@
             </exclusions>
         </dependency>
 
-	</dependencies>
+        <!-- ftp 连接工具包 -->
+        <dependency>
+            <groupId>commons-net</groupId>
+            <artifactId>commons-net</artifactId>
+            <version>3.8.0</version>
+        </dependency>
+
+        <!-- 连接池化技术 -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-dbcp2</artifactId>
+            <version>2.9.0</version>
+        </dependency>
+
+        <!-- zip、gz、tar.gz 解压-->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-compress</artifactId>
+            <version>1.21</version>
+        </dependency>
+
+        <!-- sftp 连接依赖-->
+        <dependency>
+            <groupId>com.jcraft</groupId>
+            <artifactId>jsch</artifactId>
+            <version>0.1.55</version>
+        </dependency>
+
+        <!-- 常用工具包 hutool -->
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-all</artifactId>
+            <version>5.7.9</version>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
+
+    </dependencies>
 
 	<build>
 	    <finalName>${project.artifactId}</finalName>
