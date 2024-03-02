@@ -2,16 +2,15 @@ package com.ruoyi.project.gallery.controller;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.*;
 import javax.servlet.http.HttpServletResponse;
 
 import com.ruoyi.common.utils.FTPUtil;
+import com.ruoyi.common.utils.file.ImageUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -29,27 +28,28 @@ import com.ruoyi.framework.web.domain.AjaxResult;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.framework.web.page.TableDataInfo;
 import org.springframework.web.multipart.MultipartFile;
+import static com.ruoyi.common.utils.gallery.ImageUtils.*;
 
 /**
  * 用户管理Controller
- * 
+ *
  * @author ogcfun
  * @date 2024-02-27
  */
 @RestController
 @RequestMapping("/gallery/galleryUser")
-public class GalleryUserController extends BaseController
-{
+public class GalleryUserController extends BaseController {
     @Autowired
     private IGalleryUserService galleryUserService;
+
+    private static final Logger log = LoggerFactory.getLogger(ImageUtils.class);
 
     /**
      * 查询用户管理列表
      */
     @PreAuthorize("@ss.hasPermi('gallery:galleryUser:list')")
     @GetMapping("/list")
-    public TableDataInfo list(GalleryUser galleryUser)
-    {
+    public TableDataInfo list(GalleryUser galleryUser) {
         startPage();
         List<GalleryUser> list = galleryUserService.selectGalleryUserList(galleryUser);
         return getDataTable(list);
@@ -61,8 +61,7 @@ public class GalleryUserController extends BaseController
     @PreAuthorize("@ss.hasPermi('gallery:galleryUser:export')")
     @Log(title = "用户管理", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
-    public void export(HttpServletResponse response, GalleryUser galleryUser)
-    {
+    public void export(HttpServletResponse response, GalleryUser galleryUser) {
         List<GalleryUser> list = galleryUserService.selectGalleryUserList(galleryUser);
         ExcelUtil<GalleryUser> util = new ExcelUtil<GalleryUser>(GalleryUser.class);
         util.exportExcel(response, list, "用户管理数据");
@@ -73,8 +72,7 @@ public class GalleryUserController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('gallery:galleryUser:query')")
     @GetMapping(value = "/{userId}")
-    public AjaxResult getInfo(@PathVariable("userId") Long userId)
-    {
+    public AjaxResult getInfo(@PathVariable("userId") Long userId) {
         return success(galleryUserService.selectGalleryUserByUserId(userId));
     }
 
@@ -84,8 +82,7 @@ public class GalleryUserController extends BaseController
     @PreAuthorize("@ss.hasPermi('gallery:galleryUser:add')")
     @Log(title = "用户管理", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody GalleryUser galleryUser)
-    {
+    public AjaxResult add(@RequestBody GalleryUser galleryUser) {
         return toAjax(galleryUserService.insertGalleryUser(galleryUser));
     }
 
@@ -95,8 +92,7 @@ public class GalleryUserController extends BaseController
     @PreAuthorize("@ss.hasPermi('gallery:galleryUser:edit')")
     @Log(title = "用户管理", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody GalleryUser galleryUser)
-    {
+    public AjaxResult edit(@RequestBody GalleryUser galleryUser) {
         return toAjax(galleryUserService.updateGalleryUser(galleryUser));
     }
 
@@ -105,102 +101,74 @@ public class GalleryUserController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('gallery:galleryUser:remove')")
     @Log(title = "用户管理", businessType = BusinessType.DELETE)
-	@DeleteMapping("/{userIds}")
-    public AjaxResult remove(@PathVariable Long[] userIds)
-    {
+    @DeleteMapping("/{userIds}")
+    public AjaxResult remove(@PathVariable Long[] userIds) {
         return toAjax(galleryUserService.deleteGalleryUserByUserIds(userIds));
     }
 
     /**
-     *  上传头像文件到ftp
+     * 根据用户id查找名称和头像
+     * @param userId 用户id
+     * @return 名称和头像
+     */
+    @GetMapping("/userInfo/{userId}")
+    public AjaxResult getUserId(@PathVariable Long userId) {
+        try {
+            GalleryUser galleryUser = galleryUserService.selectGalleryUserByUserId(userId);
+            if (galleryUser != null) {
+                Map<String,String> list = new HashMap<>();
+                String userName = galleryUser.getUserName();
+                String userAvatar = galleryUser.getUserAvatar();
+                list.put("userName",userName);
+                list.put("userAvatar",userAvatar);
+                return AjaxResult.success(list);
+            } else {
+                return AjaxResult.error("未找到用户");
+            }
+        } catch (Exception e) {
+            log.error("获取用户信息失败", e);
+            return AjaxResult.error("获取用户信息失败");
+        }
+    }
+
+    /**
+     * 上传头像文件到ftp
+     *
      * @param file 头像文件
      * @return 文件地址
      */
     @PostMapping("/uploadAvatar")
     public AjaxResult upload(MultipartFile file) throws IOException {
-        // 文件名
-        String fileName = file.getOriginalFilename();
-        // 获取原始文件的后缀名
-        String suffix = getSuffix(fileName);
-        // 生成随机六位字符串
-        String randomString = generateRandomString(6);
-        // 获取当前时间戳
-        long timestamp = System.currentTimeMillis();
-        // 构造最终文件名
-        fileName = "/头像/" + randomString + "_" + timestamp + suffix;
+        try {
+            // 获取最终文件名
+            String fileName = generateFileName(file);
 
-        // 将MultipartFile类型转化为File类型，并保存到本地
-        File avatarFile = multipartFileToFile(file,"C:\\temp",randomString);
-        // 获取文件绝对地址
-        String path = avatarFile.getPath();
+            // 最终文件上传路径
+            String filePath = "/头像/" + fileName;
 
-        //创建ftp对象
-        FTPUtil ftpUtil = new FTPUtil();
-        // 上传文件到FTP
-        FTPUtil.UploadStatus upload = ftpUtil.upload(path, fileName);
+            // 将MultipartFile类型转化为File类型，并保存到本地
+            File avatarFile = multipartFileToFile(file, "C:\\temp", fileName);
 
-        // 创建集合添加返回数据
-        Map<String, Object> result = new HashMap<>();
-        // 在上传过程中设置返回值
-        result.put("uploadStatus", upload);
-        result.put("userAvatar", fileName);
+            // 获取本地文件绝对地址
+            String path = avatarFile.getPath();
 
-        // 返回最终文件地址
-        return AjaxResult.success("上传成功",result);
-    }
+            //创建ftp对象
+            FTPUtil ftpUtil = new FTPUtil();
+            // 上传文件到FTP
+            FTPUtil.UploadStatus uploadStatus = ftpUtil.upload(path, filePath);
 
-    /**
-     * 将MultipartFile类型转化为File类型，并保存到本地
-     * @param multipartFile 前端传入文件
-     * @param directory 保存的文件夹
-     * @param fileName 文件名称
-     * @return file类型文件
-     * @throws IOException 报错处理
-     */
-    public static File multipartFileToFile(MultipartFile multipartFile, String directory, String fileName) throws IOException {
-        // 确定文件保存的目录路径
-        Path directoryPath = Paths.get(directory);
-        if (!Files.exists(directoryPath)) {
-            Files.createDirectories(directoryPath);
+            // 如果上传到FTP成功，则删除本地缓存的文件
+            if (uploadStatus == FTPUtil.UploadStatus.UploadNewFileSuccess ||
+                    uploadStatus == FTPUtil.UploadStatus.UploadFromBreakSuccess) {
+                deleteLocalFile(path);
+            }
+
+            // 返回最终文件地址
+            return AjaxResult.success("上传成功", filePath);
+        } catch (Exception e) {
+            log.error("上传失败", e);
+            return AjaxResult.error("上传失败");
         }
-
-        // 构造文件的完整路径
-        Path filePath = Paths.get(directory, fileName);
-
-        // 将 MultipartFile 内容写入到文件中
-        File file = filePath.toFile();
-        FileCopyUtils.copy(multipartFile.getBytes(), file);
-
-        return file;
     }
 
-    /**
-     * 获取文件后缀名的方法
-     * @param fileName 文件名
-     * @return 文件后缀
-     */
-    private static String getSuffix(String fileName) {
-        int dotIndex = fileName.lastIndexOf(".");
-        if (dotIndex != -1) {
-            return fileName.substring(dotIndex);
-        }
-        // 如果文件没有后缀名，则返回一个默认的后缀名，比如 ".png" 或者 ".dat"
-        return ".png";
-    }
-
-    /**
-     *  生成随机字符串
-     * @param length 长度
-     * @return 随机字符串
-     */
-    private static String generateRandomString(int length) {
-        String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-        StringBuilder sb = new StringBuilder(length);
-        Random random = new Random();
-        for (int i = 0; i < length; i++) {
-            int index = random.nextInt(characters.length());
-            sb.append(characters.charAt(index));
-        }
-        return sb.toString();
-    }
 }
