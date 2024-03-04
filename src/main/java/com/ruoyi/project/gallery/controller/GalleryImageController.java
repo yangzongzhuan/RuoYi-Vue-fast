@@ -16,6 +16,7 @@ import com.ruoyi.common.utils.FTPUtil;
 import com.ruoyi.common.utils.file.ImageUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -45,6 +46,9 @@ public class GalleryImageController extends BaseController
     private IGalleryImageService galleryImageService;
 
     private static final Logger log = LoggerFactory.getLogger(ImageUtils.class);
+
+    @Value("${ruoyi.profile}")
+    private String profile;
 
     /**
      * 查询列表管理列表
@@ -130,7 +134,7 @@ public class GalleryImageController extends BaseController
             String filePath = "/" + fileType + "/" + fileName;
 
             // 将MultipartFile类型转化为File类型，并保存到本地
-            File imageFile = multipartFileToFile(file, "C:\\temp", fileName);
+            File imageFile = multipartFileToFile(file, profile, fileName);
             // 获取本地文件绝对地址
             String path = imageFile.getPath();
             // 获取图像文件的大小（以字节为单位）
