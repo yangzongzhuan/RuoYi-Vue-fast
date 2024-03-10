@@ -1,6 +1,8 @@
 package com.ruoyi.project.gallery.mapper;
 
 import java.util.List;
+
+import com.ruoyi.framework.web.domain.AjaxResult;
 import com.ruoyi.project.gallery.domain.GalleryUser;
 
 /**
