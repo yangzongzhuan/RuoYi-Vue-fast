@@ -1,7 +1,10 @@
 package com.ruoyi.project.gallery.service;
 
 import java.util.List;
+
+import com.ruoyi.framework.web.domain.AjaxResult;
 import com.ruoyi.project.gallery.domain.GalleryImage;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * 列表管理Service接口
@@ -58,4 +61,12 @@ public interface IGalleryImageService
      * @return 结果
      */
     public int deleteGalleryImageByFileId(Long fileId);
+
+    /**
+     * 上传/修改单张列表图片
+     * @param fileType 图片文件夹路径
+     * @param file 图片文件
+     * @return 图片数据信息
+     */
+    public AjaxResult uploadGalleryImageByImage(String fileType , MultipartFile file);
 }

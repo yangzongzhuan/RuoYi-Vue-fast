@@ -1,7 +1,10 @@
 package com.ruoyi.project.gallery.service;
 
 import java.util.List;
+
+import com.ruoyi.framework.web.domain.AjaxResult;
 import com.ruoyi.project.gallery.domain.GalleryUser;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * 用户管理Service接口
@@ -58,4 +61,21 @@ public interface IGalleryUserService
      * @return 结果
      */
     public int deleteGalleryUserByUserId(Long userId);
+
+    /**
+     * 查询用户信息
+     *
+     * @param userId 用户ID
+     * @return 用户名称，头像地址
+     */
+    public AjaxResult getGalleryUserByUserId(Long userId);
+
+    /**
+     * 上传用户头像
+     *
+     * @param file 用户头像文件
+     * @return 用户头像地址
+     */
+    public AjaxResult uploadGalleryUserByUserAvatar(MultipartFile file);
+
 }

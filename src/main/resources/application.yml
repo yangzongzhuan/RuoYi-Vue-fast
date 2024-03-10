@@ -6,7 +6,7 @@ ruoyi:
   version: 3.8.7
   # 版权年份
   copyrightYear: 2024
-  # 文件路径 示例（ Windows配置C:/temp，Linux配置 /www/wwwroot/files/temp）
+  # 文件路径 示例（ Windows配置 C:/temp，Linux配置 /www/wwwroot/files/temp）
   profile: C:/temp
   # 获取ip地址开关
   addressEnabled: true
