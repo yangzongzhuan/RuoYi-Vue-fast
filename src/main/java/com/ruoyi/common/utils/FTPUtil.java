@@ -70,7 +70,7 @@ public class FTPUtil {
                 FileOutputStream out = new FileOutputStream(f, true);
                 ftpClient.setRestartOffset(localSize);
                 InputStream in = ftpClient.retrieveFileStream(new String(remote.getBytes(CharsetUtil.UTF_8), CharsetUtil.ISO_8859_1));
-                byte[] bytes = new byte[1024];
+                byte[] bytes = new byte[1024 * 1024 * 2];
                 long step = lRemoteSize / 100;
                 step = step == 0 ? 1 : step;// 文件过小，step可能为0
                 long process = localSize / step;
@@ -97,7 +97,7 @@ public class FTPUtil {
             } else {
                 OutputStream out = new FileOutputStream(f);
                 InputStream in = ftpClient.retrieveFileStream(new String(remote.getBytes(CharsetUtil.UTF_8), CharsetUtil.ISO_8859_1));
-                byte[] bytes = new byte[1024];
+                byte[] bytes = new byte[1024 * 1024 * 2];
                 long step = lRemoteSize / 100;
                 step = step == 0 ? 1 : step;// 文件过小，step可能为0
                 long process = 0;
@@ -451,7 +451,7 @@ public class FTPUtil {
                 raf.seek(remoteSize);
                 localreadbytes = remoteSize;
             }
-            byte[] bytes = new byte[1024];
+            byte[] bytes = new byte[1024 * 1024 * 2];
             int c;
             while ((c = raf.read(bytes)) != -1) {
                 out.write(bytes, 0, c);
