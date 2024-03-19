@@ -95,8 +95,8 @@ token:
   # 令牌密钥
   secret: abcdefghijklmnopqrstuvwxyz
   # 令牌有效期（默认30分钟）
-  expireTime: 60
-
+  expireTime: 30
+  
 # MyBatis配置
 mybatis:
   # 搜索指定包别名
@@ -137,19 +137,4 @@ gen:
   # 自动去除表前缀，默认是true
   autoRemovePre: false
   # 表前缀（生成类名不会包含表前缀，多个用逗号分隔）
-  tablePrefix: gallery_
-
-# 阿里云oss配置
-alibaba:
-  cloud:
-    #阿里云相关服务配置,用的账号：id和密钥
-    aliyun:
-      secretID:
-      secretKey:
-    oss:
-      #阿里bucket名称
-      bucketName: ogcfun
-      #Endpoint（地域节点）
-      endpointUrl: https://oss-cn-guangzhou.aliyuncs.com
-      #阿里云OSS自定义域名
-      accessDomain: https://oss.ogcfun.top/
+  tablePrefix: sys_
