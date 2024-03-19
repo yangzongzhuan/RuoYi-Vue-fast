@@ -28,6 +28,7 @@
         <fastjson.version>2.0.43</fastjson.version>
         <druid.version>1.2.20</druid.version>
         <commons.io.version>2.13.0</commons.io.version>
+        <commons.collections.version>3.2.2</commons.collections.version>
         <bitwalker.version>1.21</bitwalker.version>
         <jwt.version>0.9.1</jwt.version>
         <kaptcha.version>2.3.3</kaptcha.version>
@@ -203,6 +204,13 @@
             <version>${velocity.version}</version>
         </dependency>
 
+        <!-- collections工具类 -->
+        <dependency>
+            <groupId>commons-collections</groupId>
+            <artifactId>commons-collections</artifactId>
+            <version>${commons.collections.version}</version>
+        </dependency>
+
         <!-- 定时任务 -->
         <dependency>
             <groupId>org.quartz-scheduler</groupId>
@@ -265,6 +273,13 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
+        </dependency>
+
+        <!--     阿里云oss    -->
+        <dependency>
+            <groupId>com.aliyun.oss</groupId>
+            <artifactId>aliyun-sdk-oss</artifactId>
+            <version>3.15.1</version>
         </dependency>
 
     </dependencies>

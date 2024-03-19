@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.ruoyi.common.utils.FTPUtil;
+import com.ruoyi.common.utils.OSSUtils;
 import com.ruoyi.common.utils.file.ImageUtils;
 import com.ruoyi.framework.web.domain.AjaxResult;
 import org.slf4j.Logger;
@@ -31,6 +31,8 @@ public class GalleryUserServiceImpl implements IGalleryUserService {
     @Autowired
     private GalleryUserMapper galleryUserMapper;
 
+    @Autowired
+    private OSSUtils ossUtils;
     private static final Logger log = LoggerFactory.getLogger(ImageUtils.class);
 
     @Value("${ruoyi.profile}")
@@ -140,7 +142,7 @@ public class GalleryUserServiceImpl implements IGalleryUserService {
         String fileName = generateFileName(file);
 
         // 最终文件上传路径
-        String filePath = "/头像/" + fileName;
+        String filePath = "头像/" + fileName;
 
         try {
             // 将MultipartFile类型转化为File类型，并保存到本地
@@ -150,15 +152,21 @@ public class GalleryUserServiceImpl implements IGalleryUserService {
             String path = avatarFile.getPath();
 
             //创建ftp对象
-            FTPUtil ftpUtil = new FTPUtil();
+            //FTPUtils ftpUtil = new FTPUtils();
             // 上传文件到FTP
-            FTPUtil.UploadStatus uploadStatus = ftpUtil.upload(path, filePath);
+            //FTPUtils.UploadStatus uploadStatus = ftpUtil.upload(path, filePath);
 
             // 如果上传到FTP成功，则删除本地缓存的文件
-            if (uploadStatus == FTPUtil.UploadStatus.UploadNewFileSuccess ||
-                    uploadStatus == FTPUtil.UploadStatus.UploadFromBreakSuccess) {
+           /* if (uploadStatus == FTPUtils.UploadStatus.UploadNewFileSuccess ||
+                    uploadStatus == FTPUtils.UploadStatus.UploadFromBreakSuccess) {
                 deleteLocalFile(path);
-            }
+            }*/
+
+            // 上传文件到阿里云oss
+            ossUtils.upload(file,filePath);
+
+            //删除本地文件
+            deleteLocalFile(path);
 
             // 返回最终文件地址
             return AjaxResult.success("上传成功", filePath);
