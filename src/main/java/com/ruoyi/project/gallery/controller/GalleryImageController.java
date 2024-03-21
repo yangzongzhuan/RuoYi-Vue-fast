@@ -107,7 +107,7 @@ public class GalleryImageController extends BaseController
      * @throws IOException 报错信息
      */
     @PostMapping("/uploadImage")
-    public AjaxResult uploadImage(@RequestParam String fileType , MultipartFile file) {
-        return galleryImageService.uploadGalleryImageByImage(fileType,file);
+    public AjaxResult uploadImage(@RequestParam String fileType,@RequestParam String fileOrigin, MultipartFile file) {
+        return galleryImageService.uploadGalleryImageByImage(fileType,fileOrigin,file);
     }
 }

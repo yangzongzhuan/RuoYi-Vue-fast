@@ -48,6 +48,10 @@ public class GalleryImage extends BaseEntity
     @Excel(name = "图片地址")
     private String filePath;
 
+    /** 图片压缩地址 */
+    @Excel(name = "图片压缩地址")
+    private String  fileCompressPath;
+
     /** 图片来源 */
     @Excel(name = "图片来源")
     private String fileOrigin;
@@ -173,6 +177,14 @@ public class GalleryImage extends BaseEntity
         this.fileOrigin = fileOrigin;
     }
 
+    public String getFileCompressPath() {
+        return fileCompressPath;
+    }
+
+    public void setFileCompressPath(String fileCompressPath) {
+        this.fileCompressPath = fileCompressPath;
+    }
+
     public String getFileOrigin() 
     {
         return fileOrigin;
@@ -288,6 +300,7 @@ public class GalleryImage extends BaseEntity
             .append("fileType", getFileType())
             .append("fileSuffix", getFileSuffix())
             .append("filePath", getFilePath())
+            .append("fileCompressPath",getFileCompressPath())
             .append("fileOrigin", getFileOrigin())
             .append("fileWidth", getFileWidth())
             .append("fileHeight", getFileHeight())

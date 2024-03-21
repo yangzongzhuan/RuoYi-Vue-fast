@@ -1,8 +1,16 @@
 package com.ruoyi.common.utils.gallery;
 
+import org.apache.http.entity.ContentType;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -112,4 +120,84 @@ public class ImageUtils {
             file.delete();
         }
     }
+
+    /**
+     * 处理图像，将其缩放并裁剪为目标尺寸
+     * @param inputImagePath 输入图像路径
+     * @param targetWidth 目标宽度
+     * @param targetHeight 目标高度
+     * @throws IOException 如果发生I/O错误
+     */
+    public static MultipartFile processImage(String inputImagePath, int targetWidth, int targetHeight, String fileName) throws IOException {
+        // 检查输入路径是否有效
+        if (inputImagePath == null || inputImagePath.isEmpty()) {
+            throw new IllegalArgumentException("输入图像路径无效");
+        }
+
+        // 检查输入文件是否存在
+        File inputFile = new File(inputImagePath);
+        if (!inputFile.exists()) {
+            throw new IOException("输入图像文件不存在");
+        }
+
+        //获取最后一个.的位置
+        int lastIndexOf = fileName.lastIndexOf(".");
+        //获取图片的后缀名
+        String suffix = fileName.substring(lastIndexOf+1);
+
+        // 读取输入图像
+        BufferedImage inputImage = ImageIO.read(inputFile);
+
+        // 调整图像尺寸并裁剪
+        BufferedImage outputImage = resizeAndCropImage(inputImage, targetWidth, targetHeight);
+
+        //将newImage写入字节数组输出流
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        // 写入处理后的图像到输出文件
+        ImageIO.write(outputImage, suffix, baos);
+
+        //转换为MultipartFile
+        return new MockMultipartFile(fileName, baos.toByteArray());
+    }
+
+    /**
+     * 调整输入图像的尺寸并进行裁剪
+     * @param inputImage 输入图像
+     * @param targetWidth 目标宽度
+     * @param targetHeight 目标高度
+     * @return 处理后的图像
+     */
+    private static BufferedImage resizeAndCropImage(BufferedImage inputImage, int targetWidth, int targetHeight) {
+        // 获取输入图像的宽度和高度
+        int inputWidth = inputImage.getWidth();
+        int inputHeight = inputImage.getHeight();
+
+        // 计算缩放比例
+        double scaleX = (double) targetWidth / inputWidth;
+        double scaleY = (double) targetHeight / inputHeight;
+        double scaleFactor = Math.max(scaleX, scaleY);
+
+        // 计算缩放后的宽度和高度
+        int scaledWidth = (int) (inputWidth * scaleFactor);
+        int scaledHeight = (int) (inputHeight * scaleFactor);
+
+        // 计算裁剪位置
+        int x = (scaledWidth - targetWidth) / 2;
+        int y = (scaledHeight - targetHeight) / 2;
+
+        // 创建输出图像
+        BufferedImage outputImage = new BufferedImage(targetWidth, targetHeight, BufferedImage.TYPE_INT_RGB);
+        Graphics2D g = outputImage.createGraphics();
+
+        // 设置抗锯齿和插值方法为双线性插值
+        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+
+        // 绘制调整尺寸后的图像到输出图像
+        g.drawImage(inputImage, -x, -y, scaledWidth, scaledHeight, null);
+        g.dispose();
+
+        return outputImage;
+    }
+
 }

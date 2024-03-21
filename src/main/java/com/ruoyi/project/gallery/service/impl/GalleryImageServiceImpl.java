@@ -119,9 +119,11 @@ public class GalleryImageServiceImpl implements IGalleryImageService {
      * @return 图片数据信息
      */
     @Override
-    public AjaxResult uploadGalleryImageByImage(String fileType, MultipartFile file) {
+    public AjaxResult uploadGalleryImageByImage(String fileType, String fileOrigin, MultipartFile file) {
+        System.out.println(fileOrigin);
         // 获取最终文件名
-        String fileName = generateFileName(file);
+        String generateFileName = generateFileName(file);
+        String fileName =  fileOrigin + "_" + generateFileName;
         // 最终文件上传路径
         String filePath = fileType + "/" + fileName;
         try {
@@ -142,6 +144,14 @@ public class GalleryImageServiceImpl implements IGalleryImageService {
             // 获取图片的宽度和高度
             String width = String.valueOf(bufferedImage.getWidth());
             String height = String.valueOf(bufferedImage.getHeight());
+
+            // 保存裁剪后的缩略图
+            MultipartFile mockOutputImage = processImage(path, 472, 698, fileName);
+
+            // 缩略图保存路径
+            String compress = "compress/" + filePath;
+            // 上传缩略图文件到阿里云oss
+            ossUtils.upload(mockOutputImage,compress);
 
             //创建ftp对象
             //FTPUtils ftpUtil = new FTPUtils();
@@ -168,6 +178,7 @@ public class GalleryImageServiceImpl implements IGalleryImageService {
             result.put("fileSize", sizeString);
             result.put("fileName", fileName);
             result.put("filePath", filePath);
+            result.put("fileCompressPath",compress);
 
             return AjaxResult.success("成功", result);
         } catch (IOException e) {

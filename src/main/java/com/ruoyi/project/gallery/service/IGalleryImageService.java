@@ -68,5 +68,6 @@ public interface IGalleryImageService
      * @param file 图片文件
      * @return 图片数据信息
      */
-    public AjaxResult uploadGalleryImageByImage(String fileType , MultipartFile file);
+    public AjaxResult uploadGalleryImageByImage(String fileType ,String fileOrigin, MultipartFile file);
+
 }

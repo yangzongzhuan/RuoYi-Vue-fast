@@ -1,7 +1,7 @@
 package com.ruoyi.common.utils;
 
 import cn.hutool.core.util.CharsetUtil;
-import com.ruoyi.project.ftp.service.FTPPoolService;
+import com.ruoyi.common.utils.ftp.service.FTPPoolService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
@@ -27,7 +27,7 @@ import java.util.List;
  */
 @Component
 @Slf4j
-public class FTPUtil {
+public class FTPUtils {
     /**
      * ftp 连接池
      */

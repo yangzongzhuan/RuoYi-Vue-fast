@@ -1,8 +1,8 @@
-package com.ruoyi.project.ftp.service.imp;
+package com.ruoyi.common.utils.ftp.service.imp;
 
-import com.ruoyi.project.ftp.config.FTPPoolConfig;
-import com.ruoyi.project.ftp.factory.FTPClientFactory;
-import com.ruoyi.project.ftp.service.FTPPoolService;
+import com.ruoyi.common.utils.ftp.config.FTPPoolConfig;
+import com.ruoyi.common.utils.ftp.factory.FTPClientFactory;
+import com.ruoyi.common.utils.ftp.service.FTPPoolService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.pool2.impl.GenericObjectPool;

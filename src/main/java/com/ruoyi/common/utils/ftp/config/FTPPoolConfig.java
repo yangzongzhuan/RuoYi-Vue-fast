@@ -1,4 +1,4 @@
-package com.ruoyi.project.ftp.config;
+package com.ruoyi.common.utils.ftp.config;
 
 import lombok.Data;
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig;

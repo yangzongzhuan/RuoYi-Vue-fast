@@ -1,6 +1,6 @@
-package com.ruoyi.project.ftp.factory;
+package com.ruoyi.common.utils.ftp.factory;
 
-import com.ruoyi.project.ftp.config.FTPPoolConfig;
+import com.ruoyi.common.utils.ftp.config.FTPPoolConfig;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.net.ftp.FTP;

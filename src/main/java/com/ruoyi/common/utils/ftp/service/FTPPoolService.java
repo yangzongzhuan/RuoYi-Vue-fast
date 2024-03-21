@@ -1,6 +1,6 @@
-package com.ruoyi.project.ftp.service;
+package com.ruoyi.common.utils.ftp.service;
 
-import com.ruoyi.project.ftp.config.FTPPoolConfig;
+import com.ruoyi.common.utils.ftp.config.FTPPoolConfig;
 import org.apache.commons.net.ftp.FTPClient;
 
 /**

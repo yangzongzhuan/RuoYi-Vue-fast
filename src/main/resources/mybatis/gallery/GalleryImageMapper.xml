@@ -13,6 +13,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="fileType"    column="file_type"    />
         <result property="fileSuffix"    column="file_suffix"    />
         <result property="filePath"    column="file_path"    />
+        <result property="fileCompressPath"    column="file_compress_path"    />
         <result property="fileOrigin"    column="file_origin"    />
         <result property="fileWidth"    column="file_width"    />
         <result property="fileHeight"    column="file_height"    />
@@ -28,7 +29,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectGalleryImageVo">
-        select file_id, user_id, user_name, user_avatar, file_name, file_type, file_suffix, file_path, file_origin, file_width, file_height, file_size, file_like_count, file_collect_count, file_down_count, file_date, file_show, file_review, file_status, file_delete from gallery_image
+        select file_id, user_id, user_name, user_avatar, file_name, file_type, file_suffix, file_path, file_compress_path, file_origin, file_width, file_height, file_size, file_like_count, file_collect_count, file_down_count, file_date, file_show, file_review, file_status, file_delete from gallery_image
     </sql>
 
     <select id="selectGalleryImageList" parameterType="GalleryImage" resultMap="GalleryImageResult">
@@ -56,6 +57,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="fileType != null">file_type,</if>
             <if test="fileSuffix != null">file_suffix,</if>
             <if test="filePath != null">file_path,</if>
+            <if test="fileCompressPath != null">file_compress_path,</if>
             <if test="fileOrigin != null">file_origin,</if>
             <if test="fileWidth != null">file_width,</if>
             <if test="fileHeight != null">file_height,</if>
@@ -77,6 +79,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="fileType != null">#{fileType},</if>
             <if test="fileSuffix != null">#{fileSuffix},</if>
             <if test="filePath != null">#{filePath},</if>
+            <if test="fileCompressPath != null">#{fileCompressPath},</if>
             <if test="fileOrigin != null">#{fileOrigin},</if>
             <if test="fileWidth != null">#{fileWidth},</if>
             <if test="fileHeight != null">#{fileHeight},</if>
@@ -102,6 +105,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="fileType != null">file_type = #{fileType},</if>
             <if test="fileSuffix != null">file_suffix = #{fileSuffix},</if>
             <if test="filePath != null">file_path = #{filePath},</if>
+            <if test="fileCompressPath != null">file_compress_path = #{fileCompressPath},</if>
             <if test="fileOrigin != null">file_origin = #{fileOrigin},</if>
             <if test="fileWidth != null">file_width = #{fileWidth},</if>
             <if test="fileHeight != null">file_height = #{fileHeight},</if>
