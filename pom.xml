@@ -27,7 +27,7 @@
         <spring-framework.version>5.3.33</spring-framework.version>
         <pagehelper.spring.boot.starter.version>1.4.7</pagehelper.spring.boot.starter.version>
         <fastjson.version>2.0.43</fastjson.version>
-        <druid.version>1.2.20</druid.version>
+        <druid.version>1.2.23</druid.version>
         <commons.io.version>2.13.0</commons.io.version>
         <bitwalker.version>1.21</bitwalker.version>
         <jwt.version>0.9.1</jwt.version>
