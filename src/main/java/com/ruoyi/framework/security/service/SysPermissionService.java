@@ -65,7 +65,7 @@ public class SysPermissionService
             List<SysRole> roles = user.getRoles();
             if (!CollectionUtils.isEmpty(roles))
             {
-                // 多角色设置permissions属性，以便数据权限匹配权限
+                // 设置permissions属性，以便数据权限匹配权限
                 for (SysRole role : roles)
                 {
                     Set<String> rolePerms = menuService.selectMenuPermsByRoleId(role.getRoleId());
