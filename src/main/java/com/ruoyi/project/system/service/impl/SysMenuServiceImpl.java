@@ -438,7 +438,7 @@ public class SysMenuServiceImpl implements ISysMenuService
         return menu.getParentId().intValue() == 0 && UserConstants.TYPE_MENU.equals(menu.getMenuType())
                 && menu.getIsFrame().equals(UserConstants.NO_FRAME);
     }
-    
+
     /**
      * 是否为parent_view组件
      * 
