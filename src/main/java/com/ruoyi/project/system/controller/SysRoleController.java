@@ -45,10 +45,10 @@ public class SysRoleController extends BaseController
 
     @Autowired
     private TokenService tokenService;
-    
+
     @Autowired
     private SysPermissionService permissionService;
-    
+
     @Autowired
     private ISysUserService userService;
 

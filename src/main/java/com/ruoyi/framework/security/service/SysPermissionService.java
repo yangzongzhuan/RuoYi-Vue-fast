@@ -6,6 +6,8 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
+import com.ruoyi.common.constant.UserConstants;
+import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.project.system.domain.SysRole;
 import com.ruoyi.project.system.domain.SysUser;
 import com.ruoyi.project.system.service.ISysMenuService;
@@ -68,9 +70,12 @@ public class SysPermissionService
                 // 设置permissions属性，以便数据权限匹配权限
                 for (SysRole role : roles)
                 {
-                    Set<String> rolePerms = menuService.selectMenuPermsByRoleId(role.getRoleId());
-                    role.setPermissions(rolePerms);
-                    perms.addAll(rolePerms);
+                    if (StringUtils.equals(role.getStatus(), UserConstants.ROLE_NORMAL))
+                    {
+                        Set<String> rolePerms = menuService.selectMenuPermsByRoleId(role.getRoleId());
+                        role.setPermissions(rolePerms);
+                        perms.addAll(rolePerms);
+                    }
                 }
             }
             else
