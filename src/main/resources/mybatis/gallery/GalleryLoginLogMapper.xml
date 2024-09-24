@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.gallery.mapper.GalleryLoginLogMapper">
+    
+    <resultMap type="GalleryLoginLog" id="GalleryLoginLogResult">
+        <result property="logId"    column="log_id"    />
+        <result property="userAccount"    column="user_account"    />
+        <result property="logIp"    column="log_ip"    />
+        <result property="logCity"    column="log_city"    />
+        <result property="logRegionname"    column="log_regionName"    />
+        <result property="logCountry"    column="log_country"    />
+        <result property="logOs"    column="log_os"    />
+        <result property="logBroswer"    column="log_broswer"    />
+        <result property="logDate"    column="log_date"    />
+    </resultMap>
+
+    <sql id="selectGalleryLoginLogVo">
+        select log_id, user_account, log_ip, log_city, log_regionName, log_country, log_os, log_broswer, log_date from gallery_login_log
+    </sql>
+
+    <select id="selectGalleryLoginLogList" parameterType="GalleryLoginLog" resultMap="GalleryLoginLogResult">
+        <include refid="selectGalleryLoginLogVo"/>
+        <where>  
+            <if test="logId != null "> and log_id = #{logId}</if>
+            <if test="userAccount != null  and userAccount != ''"> and user_account = #{userAccount}</if>
+            <if test="params.beginLogDate != null and params.beginLogDate != '' and params.endLogDate != null and params.endLogDate != ''"> and log_date between #{params.beginLogDate} and #{params.endLogDate}</if>
+        </where>
+    </select>
+    
+    <select id="selectGalleryLoginLogByLogId" parameterType="Long" resultMap="GalleryLoginLogResult">
+        <include refid="selectGalleryLoginLogVo"/>
+        where log_id = #{logId}
+    </select>
+        
+    <insert id="insertGalleryLoginLog" parameterType="GalleryLoginLog" useGeneratedKeys="true" keyProperty="logId">
+        insert into gallery_login_log
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userAccount != null and userAccount != ''">user_account,</if>
+            <if test="logIp != null">log_ip,</if>
+            <if test="logCity != null">log_city,</if>
+            <if test="logRegionname != null">log_regionName,</if>
+            <if test="logCountry != null">log_country,</if>
+            <if test="logOs != null">log_os,</if>
+            <if test="logBroswer != null">log_broswer,</if>
+            <if test="logDate != null">log_date,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userAccount != null and userAccount != ''">#{userAccount},</if>
+            <if test="logIp != null">#{logIp},</if>
+            <if test="logCity != null">#{logCity},</if>
+            <if test="logRegionname != null">#{logRegionname},</if>
+            <if test="logCountry != null">#{logCountry},</if>
+            <if test="logOs != null">#{logOs},</if>
+            <if test="logBroswer != null">#{logBroswer},</if>
+            <if test="logDate != null">#{logDate},</if>
+         </trim>
+    </insert>
+
+    <update id="updateGalleryLoginLog" parameterType="GalleryLoginLog">
+        update gallery_login_log
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userAccount != null and userAccount != ''">user_account = #{userAccount},</if>
+            <if test="logIp != null">log_ip = #{logIp},</if>
+            <if test="logCity != null">log_city = #{logCity},</if>
+            <if test="logRegionname != null">log_regionName = #{logRegionname},</if>
+            <if test="logCountry != null">log_country = #{logCountry},</if>
+            <if test="logOs != null">log_os = #{logOs},</if>
+            <if test="logBroswer != null">log_broswer = #{logBroswer},</if>
+            <if test="logDate != null">log_date = #{logDate},</if>
+        </trim>
+        where log_id = #{logId}
+    </update>
+
+    <delete id="deleteGalleryLoginLogByLogId" parameterType="Long">
+        delete from gallery_login_log where log_id = #{logId}
+    </delete>
+
+    <delete id="deleteGalleryLoginLogByLogIds" parameterType="String">
+        delete from gallery_login_log where log_id in 
+        <foreach item="logId" collection="array" open="(" separator="," close=")">
+            #{logId}
+        </foreach>
+    </delete>
+</mapper>
