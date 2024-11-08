@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.gallery.mapper.GalleryTypeMapper">
+    
+    <resultMap type="GalleryType" id="GalleryTypeResult">
+        <result property="typeId"    column="type_id"    />
+        <result property="fileType"    column="file_type"    />
+        <result property="createDate"    column="create_date"    />
+        <result property="updateDate"    column="update_date"    />
+    </resultMap>
+
+    <sql id="selectGalleryTypeVo">
+        select type_id, file_type, create_date, update_date from gallery_type
+    </sql>
+
+    <select id="selectGalleryTypeList" parameterType="GalleryType" resultMap="GalleryTypeResult">
+        <include refid="selectGalleryTypeVo"/>
+        <where>  
+            <if test="params.beginCreateDate != null and params.beginCreateDate != '' and params.endCreateDate != null and params.endCreateDate != ''"> and create_date between #{params.beginCreateDate} and #{params.endCreateDate}</if>
+            <if test="params.beginUpdateDate != null and params.beginUpdateDate != '' and params.endUpdateDate != null and params.endUpdateDate != ''"> and update_date between #{params.beginUpdateDate} and #{params.endUpdateDate}</if>
+        </where>
+    </select>
+    
+    <select id="selectGalleryTypeByTypeId" parameterType="Long" resultMap="GalleryTypeResult">
+        <include refid="selectGalleryTypeVo"/>
+        where type_id = #{typeId}
+    </select>
+        
+    <insert id="insertGalleryType" parameterType="GalleryType" useGeneratedKeys="true" keyProperty="typeId">
+        insert into gallery_type
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="fileType != null and fileType != ''">file_type,</if>
+            <if test="createDate != null">create_date,</if>
+            <if test="updateDate != null">update_date,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="fileType != null and fileType != ''">#{fileType},</if>
+            <if test="createDate != null">#{createDate},</if>
+            <if test="updateDate != null">#{updateDate},</if>
+         </trim>
+    </insert>
+
+    <update id="updateGalleryType" parameterType="GalleryType">
+        update gallery_type
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="fileType != null and fileType != ''">file_type = #{fileType},</if>
+            <if test="createDate != null">create_date = #{createDate},</if>
+            <if test="updateDate != null">update_date = #{updateDate},</if>
+        </trim>
+        where type_id = #{typeId}
+    </update>
+
+    <delete id="deleteGalleryTypeByTypeId" parameterType="Long">
+        delete from gallery_type where type_id = #{typeId}
+    </delete>
+
+    <delete id="deleteGalleryTypeByTypeIds" parameterType="String">
+        delete from gallery_type where type_id in 
+        <foreach item="typeId" collection="array" open="(" separator="," close=")">
+            #{typeId}
+        </foreach>
+    </delete>
+</mapper>
