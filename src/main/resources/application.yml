@@ -1,15 +1,15 @@
 # 项目相关配置
 ruoyi:
   # 名称
-  name: RuoYi
+  name: ogcfun
   # 版本
   version: 3.8.8
   # 版权年份
   copyrightYear: 2024
-  # 文件路径 示例（ Windows配置D:/ruoyi/uploadPath，Linux配置 /home/ruoyi/uploadPath）
-  profile: D:/ruoyi/uploadPath
+  # 文件路径 示例（ Windows配置 C:/temp，Linux配置 /www/wwwroot/files/temp）
+  profile: C:/temp
   # 获取ip地址开关
-  addressEnabled: false
+  addressEnabled: true
   # 验证码类型 math 数字计算 char 字符验证
   captchaType: math
 
@@ -57,9 +57,9 @@ spring:
   servlet:
     multipart:
       # 单个文件大小
-      max-file-size: 10MB
+      max-file-size: 50MB
       # 设置总上传的文件大小
-      max-request-size: 20MB
+      max-request-size: 500MB
   # 服务模块
   devtools:
     restart:
@@ -95,8 +95,8 @@ token:
   # 令牌密钥
   secret: abcdefghijklmnopqrstuvwxyz
   # 令牌有效期（默认30分钟）
-  expireTime: 30
-  
+  expireTime: 60
+
 # MyBatis配置
 mybatis:
   # 搜索指定包别名
@@ -127,14 +127,29 @@ xss:
   excludes: /system/notice
   # 匹配链接
   urlPatterns: /system/*,/monitor/*,/tool/*
-  
+
 # 代码生成
 gen:
   # 作者
-  author: ruoyi
+  author: ogcfun
   # 默认生成包路径 system 需改成自己的模块名称 如 system monitor tool
-  packageName: com.ruoyi.project.system
+  packageName: com.ruoyi.project.gallery
   # 自动去除表前缀，默认是true
   autoRemovePre: false
   # 表前缀（生成类名不会包含表前缀，多个用逗号分隔）
-  tablePrefix: sys_
+  tablePrefix: gallery_
+
+# 阿里云oss配置
+alibaba:
+  cloud:
+    #阿里云相关服务配置,用的账号：id和密钥
+    aliyun:
+      secretID:
+      secretKey:
+    oss:
+      #阿里bucket名称
+      bucketName: ogcfun
+      #Endpoint（地域节点）
+      endpointUrl: https://oss-cn-guangzhou.aliyuncs.com
+      #阿里云OSS自定义域名
+      accessDomain: https://oss.ogcfun.top/

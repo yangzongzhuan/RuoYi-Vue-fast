@@ -6,9 +6,9 @@ spring:
         druid:
             # 主库数据源
             master:
-                url: jdbc:mysql://localhost:3306/ry-vue?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
+                url: jdbc:mysql://localhost:3306/ogcfun?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
                 username: root
-                password: password
+                password: root
             # 从库数据源
             slave:
                 # 从数据源开关/默认关闭
@@ -23,15 +23,15 @@ spring:
             # 最大连接池数量
             maxActive: 20
             # 配置获取连接等待超时的时间
-            maxWait: 60000
+            maxWait: 600000
             # 配置连接超时时间
-            connectTimeout: 30000
+            connectTimeout: 600000
             # 配置网络超时时间
-            socketTimeout: 60000
+            socketTimeout: 600000
             # 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
-            timeBetweenEvictionRunsMillis: 60000
+            timeBetweenEvictionRunsMillis: 600000
             # 配置一个连接在池中最小生存的时间，单位是毫秒
-            minEvictableIdleTimeMillis: 300000
+            minEvictableIdleTimeMillis: 600000
             # 配置一个连接在池中最大生存的时间，单位是毫秒
             maxEvictableIdleTimeMillis: 900000
             # 配置检测连接是否有效
@@ -47,8 +47,8 @@ spring:
                 allow:
                 url-pattern: /druid/*
                 # 控制台管理用户名和密码
-                login-username: ruoyi
-                login-password: 123456
+                login-username: ogcfun
+                login-password: ogcfun
             filter:
                 stat:
                     enabled: true

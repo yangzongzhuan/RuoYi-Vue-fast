@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.gallery.mapper.GalleryFeedbackMapper">
+    
+    <resultMap type="GalleryFeedback" id="GalleryFeedbackResult">
+        <result property="fbId"    column="fb_id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="userName"    column="user_name"    />
+        <result property="fbDesc"    column="fb_desc"    />
+        <result property="fbImage"    column="fb_image"    />
+        <result property="fbDate"    column="fb_date"    />
+        <result property="fbSchedule"    column="fb_schedule"    />
+    </resultMap>
+
+    <sql id="selectGalleryFeedbackVo">
+        select fb_id, user_id, user_name, fb_desc, fb_image, fb_date, fb_schedule from gallery_feedback
+    </sql>
+
+    <select id="selectGalleryFeedbackList" parameterType="GalleryFeedback" resultMap="GalleryFeedbackResult">
+        <include refid="selectGalleryFeedbackVo"/>
+        <where>  
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="userName != null  and userName != ''"> and user_name like concat('%', #{userName}, '%')</if>
+            <if test="params.beginFbDate != null and params.beginFbDate != '' and params.endFbDate != null and params.endFbDate != ''"> and fb_date between #{params.beginFbDate} and #{params.endFbDate}</if>
+            <if test="fbSchedule != null "> and fb_schedule = #{fbSchedule}</if>
+        </where>
+    </select>
+    
+    <select id="selectGalleryFeedbackByFbId" parameterType="Long" resultMap="GalleryFeedbackResult">
+        <include refid="selectGalleryFeedbackVo"/>
+        where fb_id = #{fbId}
+    </select>
+        
+    <insert id="insertGalleryFeedback" parameterType="GalleryFeedback" useGeneratedKeys="true" keyProperty="fbId">
+        insert into gallery_feedback
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">user_id,</if>
+            <if test="userName != null and userName != ''">user_name,</if>
+            <if test="fbDesc != null and fbDesc != ''">fb_desc,</if>
+            <if test="fbImage != null">fb_image,</if>
+            <if test="fbDate != null">fb_date,</if>
+            <if test="fbSchedule != null">fb_schedule,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null">#{userId},</if>
+            <if test="userName != null and userName != ''">#{userName},</if>
+            <if test="fbDesc != null and fbDesc != ''">#{fbDesc},</if>
+            <if test="fbImage != null">#{fbImage},</if>
+            <if test="fbDate != null">#{fbDate},</if>
+            <if test="fbSchedule != null">#{fbSchedule},</if>
+         </trim>
+    </insert>
+
+    <update id="updateGalleryFeedback" parameterType="GalleryFeedback">
+        update gallery_feedback
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="userName != null and userName != ''">user_name = #{userName},</if>
+            <if test="fbDesc != null and fbDesc != ''">fb_desc = #{fbDesc},</if>
+            <if test="fbImage != null">fb_image = #{fbImage},</if>
+            <if test="fbDate != null">fb_date = #{fbDate},</if>
+            <if test="fbSchedule != null">fb_schedule = #{fbSchedule},</if>
+        </trim>
+        where fb_id = #{fbId}
+    </update>
+
+    <delete id="deleteGalleryFeedbackByFbId" parameterType="Long">
+        delete from gallery_feedback where fb_id = #{fbId}
+    </delete>
+
+    <delete id="deleteGalleryFeedbackByFbIds" parameterType="String">
+        delete from gallery_feedback where fb_id in 
+        <foreach item="fbId" collection="array" open="(" separator="," close=")">
+            #{fbId}
+        </foreach>
+    </delete>
+</mapper>
