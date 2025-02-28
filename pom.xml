@@ -36,7 +36,7 @@
         <oshi.version>6.6.5</oshi.version>
         <velocity.version>2.3</velocity.version>
         <!-- override dependency version -->
-        <tomcat.version>9.0.96</tomcat.version>
+        <tomcat.version>9.0.100</tomcat.version>
         <logback.version>1.2.13</logback.version>
         <spring-security.version>5.7.12</spring-security.version>
         <spring-framework.version>5.3.39</spring-framework.version>
