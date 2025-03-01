@@ -49,7 +49,7 @@ public class TokenService
 
     protected static final long MILLIS_MINUTE = 60 * MILLIS_SECOND;
 
-    private static final Long MILLIS_MINUTE_TEN = 20 * 60 * 1000L;
+    private static final Long MILLIS_MINUTE_TWENTY = 20 * 60 * 1000L;
 
     @Autowired
     private RedisCache redisCache;
@@ -127,14 +127,14 @@ public class TokenService
     /**
      * 验证令牌有效期，相差不足20分钟，自动刷新缓存
      * 
-     * @param token 令牌
+     * @param loginUser 登录信息
      * @return 令牌
      */
     public void verifyToken(LoginUser loginUser)
     {
         long expireTime = loginUser.getExpireTime();
         long currentTime = System.currentTimeMillis();
-        if (expireTime - currentTime <= MILLIS_MINUTE_TEN)
+        if (expireTime - currentTime <= MILLIS_MINUTE_TWENTY)
         {
             refreshToken(loginUser);
         }
@@ -153,7 +153,7 @@ public class TokenService
         String userKey = getTokenKey(loginUser.getToken());
         redisCache.setCacheObject(userKey, loginUser, expireTime, TimeUnit.MINUTES);
     }
-    
+
     /**
      * 设置用户代理信息
      * 
@@ -168,7 +168,7 @@ public class TokenService
         loginUser.setBrowser(userAgent.getBrowser().getName());
         loginUser.setOs(userAgent.getOperatingSystem().getName());
     }
-    
+
     /**
      * 从数据声明生成令牌
      *
