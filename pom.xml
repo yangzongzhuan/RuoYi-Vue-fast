@@ -32,7 +32,7 @@
         <jwt.version>0.9.1</jwt.version>
         <kaptcha.version>2.3.3</kaptcha.version>
         <swagger.version>3.0.0</swagger.version>
-        <poi.version>4.1.2</poi.version>
+        <poi.version>5.4.0</poi.version>
         <oshi.version>6.6.5</oshi.version>
         <velocity.version>2.3</velocity.version>
         <!-- override dependency version -->
