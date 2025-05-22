@@ -1,5 +1,6 @@
 package com.ruoyi.project.system.controller;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import com.ruoyi.common.constant.Constants;
+import com.ruoyi.common.core.text.Convert;
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.framework.security.LoginBody;
 import com.ruoyi.framework.security.LoginUser;
@@ -17,6 +19,7 @@ import com.ruoyi.framework.security.service.TokenService;
 import com.ruoyi.framework.web.domain.AjaxResult;
 import com.ruoyi.project.system.domain.SysMenu;
 import com.ruoyi.project.system.domain.SysUser;
+import com.ruoyi.project.system.service.ISysConfigService;
 import com.ruoyi.project.system.service.ISysMenuService;
 
 /**
@@ -38,6 +41,9 @@ public class SysLoginController
 
     @Autowired
     private TokenService tokenService;
+    
+    @Autowired
+    private ISysConfigService configService;
 
     /**
      * 登录方法
@@ -79,6 +85,7 @@ public class SysLoginController
         ajax.put("user", user);
         ajax.put("roles", roles);
         ajax.put("permissions", permissions);
+        ajax.put("isDefaultModifyPwd", initPasswordIsModify(user.getPwdUpdateDate()));
         return ajax;
     }
 
@@ -93,5 +100,12 @@ public class SysLoginController
         Long userId = SecurityUtils.getUserId();
         List<SysMenu> menus = menuService.selectMenuTreeByUserId(userId);
         return AjaxResult.success(menuService.buildMenus(menus));
+    }
+    
+    // 检查初始密码是否提醒修改
+    public boolean initPasswordIsModify(Date pwdUpdateDate)
+    {
+        Integer initPasswordModify = Convert.toInt(configService.selectConfigByKey("sys.account.initPasswordModify"));
+        return initPasswordModify != null && initPasswordModify == 1 && pwdUpdateDate == null;
     }
 }
