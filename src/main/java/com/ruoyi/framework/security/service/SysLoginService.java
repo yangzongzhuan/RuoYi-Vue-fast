@@ -25,7 +25,6 @@ import com.ruoyi.framework.manager.factory.AsyncFactory;
 import com.ruoyi.framework.redis.RedisCache;
 import com.ruoyi.framework.security.LoginUser;
 import com.ruoyi.framework.security.context.AuthenticationContextHolder;
-import com.ruoyi.project.system.domain.SysUser;
 import com.ruoyi.project.system.service.ISysConfigService;
 import com.ruoyi.project.system.service.ISysUserService;
 
@@ -172,10 +171,6 @@ public class SysLoginService
      */
     public void recordLoginInfo(Long userId)
     {
-        SysUser sysUser = new SysUser();
-        sysUser.setUserId(userId);
-        sysUser.setLoginIp(IpUtils.getIpAddr());
-        sysUser.setLoginDate(DateUtils.getNowDate());
-        userService.updateUserProfile(sysUser);
+        userService.updateLoginInfo(userId, IpUtils.getIpAddr(), DateUtils.getNowDate());
     }
 }
