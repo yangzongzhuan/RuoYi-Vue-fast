@@ -33,7 +33,7 @@
         <kaptcha.version>2.3.3</kaptcha.version>
         <swagger.version>3.0.0</swagger.version>
         <poi.version>4.1.2</poi.version>
-        <oshi.version>6.8.2</oshi.version>
+        <oshi.version>6.8.3</oshi.version>
         <velocity.version>2.3</velocity.version>
         <!-- override dependency version -->
         <tomcat.version>9.0.108</tomcat.version>
