@@ -17,7 +17,6 @@ import com.ruoyi.framework.aspectj.lang.annotation.DataScope;
 import com.ruoyi.project.system.domain.SysRole;
 import com.ruoyi.project.system.domain.SysRoleDept;
 import com.ruoyi.project.system.domain.SysRoleMenu;
-import com.ruoyi.project.system.domain.SysUser;
 import com.ruoyi.project.system.domain.SysUserRole;
 import com.ruoyi.project.system.mapper.SysRoleDeptMapper;
 import com.ruoyi.project.system.mapper.SysRoleMapper;
@@ -197,7 +196,7 @@ public class SysRoleServiceImpl implements ISysRoleService
     @Override
     public void checkRoleDataScope(Long... roleIds)
     {
-        if (!SysUser.isAdmin(SecurityUtils.getUserId()))
+        if (!SecurityUtils.isAdmin())
         {
             for (Long roleId : roleIds)
             {

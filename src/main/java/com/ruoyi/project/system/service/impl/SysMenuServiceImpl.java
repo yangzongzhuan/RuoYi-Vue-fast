@@ -17,7 +17,6 @@ import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.framework.web.domain.TreeSelect;
 import com.ruoyi.project.system.domain.SysMenu;
 import com.ruoyi.project.system.domain.SysRole;
-import com.ruoyi.project.system.domain.SysUser;
 import com.ruoyi.project.system.domain.vo.MetaVo;
 import com.ruoyi.project.system.domain.vo.RouterVo;
 import com.ruoyi.project.system.mapper.SysMenuMapper;
@@ -67,7 +66,7 @@ public class SysMenuServiceImpl implements ISysMenuService
     {
         List<SysMenu> menuList = null;
         // 管理员显示所有菜单信息
-        if (SysUser.isAdmin(userId))
+        if (SecurityUtils.isAdmin(userId))
         {
             menuList = menuMapper.selectMenuList(menu);
         }
