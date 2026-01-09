@@ -60,7 +60,7 @@ public interface SysMenuMapper
     /**
      * 根据用户ID查询菜单
      * 
-     * @param username 用户ID
+     * @param userId 用户ID
      * @return 菜单列表
      */
     public List<SysMenu> selectMenuTreeByUserId(Long userId);
@@ -122,4 +122,13 @@ public interface SysMenuMapper
      * @return 结果
      */
     public SysMenu checkMenuNameUnique(@Param("menuName") String menuName, @Param("parentId") Long parentId);
+
+    /**
+     * 根据路由路径或名称查询菜单信息（用于唯一性校验）
+     *
+     * @param path 路由地址
+     * @param routeName 路由名称
+     * @return 匹配的菜单列表
+     */
+    public List<SysMenu> selectMenusByPathOrRouteName(@Param("path") String path, @Param("routeName") String routeName);
 }
