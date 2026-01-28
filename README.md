@@ -12,7 +12,7 @@
 ## 平台简介
 
 * 本仓库为RuoYi-Vue的单应用版本，保持同步更新。
-* 仓库多个配套前端版本：Vue2经典版 [RuoYi-Vue](https://gitee.com/y_project/RuoYi-Vue/tree/master/ruoyi-ui) (Vue2 + Element + Vue CLI)， Vue3标准版 [RuoYi-Vue3](https://gitcode.com/yangzongzhuan/RuoYi-Vue3)，技术栈(Vue3 + Element Plus + Vite)，以及 Vue3+TS增强版 [RuoYi-Vue3-TypeScript](https://gitcode.com/yangzongzhuan/RuoYi-Vue3/tree/typescript) (TypeScript + Vue3 + Element Plus + Vite)。
+* 仓库多个配套前端版本：Vue2经典版 [RuoYi-Vue](https://gitee.com/y_project/RuoYi-Vue/tree/master/ruoyi-ui)，Vue3标准版 [RuoYi-Vue3](https://gitcode.com/yangzongzhuan/RuoYi-Vue3)，以及 Vue3+TS增强版 [RuoYi-Vue3-TypeScript](https://gitcode.com/yangzongzhuan/RuoYi-Vue3/tree/typescript)。
 * 前端采用Vue、Element UI。
 * 后端采用Spring Boot、Spring Security、Redis & Jwt。
 * 权限认证使用Jwt，支持多终端认证系统。
