@@ -168,13 +168,14 @@ public class GenTableServiceImpl implements IGenTableService
      */
     @Override
     @Transactional
-    public void importGenTable(List<GenTable> tableList, String operName)
+    public void importGenTable(List<GenTable> tableList, String tplWebType, String operName)
     {
         try
         {
             for (GenTable table : tableList)
             {
                 String tableName = table.getTableName();
+                table.setTplWebType(tplWebType);
                 GenUtils.initTable(table, operName);
                 int row = genTableMapper.insertGenTable(table);
                 if (row > 0)
@@ -267,7 +268,7 @@ public class GenTableServiceImpl implements IGenTableService
         List<String> templates = VelocityUtils.getTemplateList(table.getTplCategory(), table.getTplWebType());
         for (String template : templates)
         {
-            if (!StringUtils.containsAny(template, "sql.vm", "api.js.vm", "index.vue.vm", "index-tree.vue.vm"))
+            if (!StringUtils.containsAny(template, "sql.vm", "api.js.vm", "api.ts.vm", "type.ts.vm", "index.ts.vm", "index.vue.vm", "index-tree.vue.vm"))
             {
                 // 渲染模板
                 StringWriter sw = new StringWriter();
