@@ -11,13 +11,16 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import com.ruoyi.common.core.text.Convert;
 import com.ruoyi.framework.aspectj.lang.annotation.Log;
 import com.ruoyi.framework.aspectj.lang.enums.BusinessType;
 import com.ruoyi.framework.web.controller.BaseController;
 import com.ruoyi.framework.web.domain.AjaxResult;
 import com.ruoyi.framework.web.page.TableDataInfo;
 import com.ruoyi.project.system.domain.SysNotice;
+import com.ruoyi.project.system.service.ISysNoticeReadService;
 import com.ruoyi.project.system.service.ISysNoticeService;
 
 /**
@@ -31,6 +34,9 @@ public class SysNoticeController extends BaseController
 {
     @Autowired
     private ISysNoticeService noticeService;
+
+    @Autowired
+    private ISysNoticeReadService noticeReadService;
 
     /**
      * 获取通知公告列表
@@ -79,6 +85,46 @@ public class SysNoticeController extends BaseController
     }
 
     /**
+     * 首页顶部公告列表（返回全部正常公告，带当前用户已读标记，最多5条）
+     */
+    @GetMapping("/listTop")
+    @ResponseBody
+    public AjaxResult listTop()
+    {
+        Long userId = getUserId();
+        List<SysNotice> list = noticeReadService.selectNoticeListWithReadStatus(userId, 5);
+        long unreadCount = list.stream().filter(n -> !n.getIsRead()).count();
+        AjaxResult result = AjaxResult.success(list);
+        result.put("unreadCount", unreadCount);
+        return result;
+    }
+
+    /**
+     * 标记公告已读
+     */
+    @PostMapping("/markRead")
+    @ResponseBody
+    public AjaxResult markRead(Long noticeId)
+    {
+        Long userId = getUserId();
+        noticeReadService.markRead(noticeId, userId);
+        return success();
+    }
+
+    /**
+     * 批量标记已读
+     */
+    @PostMapping("/markReadAll")
+    @ResponseBody
+    public AjaxResult markReadAll(String ids)
+    {
+        Long userId = getUserId();
+        Long[] noticeIds = Convert.toLongArray(ids);
+        noticeReadService.markReadBatch(userId, noticeIds);
+        return success();
+    }
+
+    /**
      * 删除通知公告
      */
     @PreAuthorize("@ss.hasPermi('system:notice:remove')")
@@ -86,6 +132,7 @@ public class SysNoticeController extends BaseController
     @DeleteMapping("/{noticeIds}")
     public AjaxResult remove(@PathVariable Long[] noticeIds)
     {
+        noticeReadService.deleteByNoticeIds(noticeIds);
         return toAjax(noticeService.deleteNoticeByIds(noticeIds));
     }
 }
