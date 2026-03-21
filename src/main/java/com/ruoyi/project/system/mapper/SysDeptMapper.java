@@ -115,4 +115,11 @@ public interface SysDeptMapper
      * @return 结果
      */
     public int deleteDeptById(Long deptId);
+
+    /**
+     * 保存部门排序
+     *
+     * @param dept 部门信息
+     */
+    public void updateDeptSort(SysDept dept);
 }

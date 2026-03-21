@@ -121,4 +121,12 @@ public interface ISysDeptService
      * @return 结果
      */
     public int deleteDeptById(Long deptId);
+
+    /**
+     * 保存部门排序
+     *
+     * @param deptIds 部门ID数组
+     * @param orderNums 排序数组
+     */
+    public void updateDeptSort(String[] deptIds, String[] orderNums);
 }

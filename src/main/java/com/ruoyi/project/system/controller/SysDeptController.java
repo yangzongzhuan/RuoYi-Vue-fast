@@ -1,6 +1,7 @@
 package com.ruoyi.project.system.controller;
 
 import java.util.List;
+import java.util.Map;
 import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -128,5 +129,18 @@ public class SysDeptController extends BaseController
         }
         deptService.checkDeptDataScope(deptId);
         return toAjax(deptService.deleteDeptById(deptId));
+    }
+
+    /**
+     * 保存部门排序
+     */
+    @Log(title = "保存部门排序", businessType = BusinessType.UPDATE)
+    @PutMapping("/updateSort")
+    public AjaxResult updateSort(@RequestBody Map<String, String> params)
+    {
+        String[] deptIds = params.get("deptIds").split(",");
+        String[] orderNums = params.get("orderNums").split(",");
+        deptService.updateDeptSort(deptIds, orderNums);
+        return success();
     }
 }
