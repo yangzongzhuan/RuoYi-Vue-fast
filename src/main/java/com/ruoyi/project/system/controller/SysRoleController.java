@@ -13,11 +13,9 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.framework.aspectj.lang.annotation.Log;
 import com.ruoyi.framework.aspectj.lang.enums.BusinessType;
-import com.ruoyi.framework.security.LoginUser;
 import com.ruoyi.framework.security.service.SysPermissionService;
 import com.ruoyi.framework.security.service.TokenService;
 import com.ruoyi.framework.web.controller.BaseController;
@@ -128,14 +126,8 @@ public class SysRoleController extends BaseController
         
         if (roleService.updateRole(role) > 0)
         {
-            // 更新缓存用户权限
-            LoginUser loginUser = getLoginUser();
-            if (StringUtils.isNotNull(loginUser.getUser()) && !loginUser.getUser().isAdmin())
-            {
-                loginUser.setUser(userService.selectUserByUserName(loginUser.getUser().getUserName()));
-                loginUser.setPermissions(permissionService.getMenuPermission(loginUser.getUser()));
-                tokenService.setLoginUser(loginUser);
-            }
+            // 刷新所有持有该角色的在线用户权限
+            tokenService.refreshPermissionByRoleId(role.getRoleId(), permissionService);
             return success();
         }
         return error("修改角色'" + role.getRoleName() + "'失败，请联系管理员");
