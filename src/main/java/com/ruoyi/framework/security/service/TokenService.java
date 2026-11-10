@@ -1,9 +1,13 @@
 package com.ruoyi.framework.security.service;
 
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+import javax.crypto.SecretKey;
 import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,7 +26,7 @@ import com.ruoyi.framework.redis.RedisCache;
 import com.ruoyi.framework.security.LoginUser;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
 
 /**
  * token验证处理
@@ -179,9 +183,25 @@ public class TokenService
     private String createToken(Map<String, Object> claims)
     {
         String token = Jwts.builder()
-                .setClaims(claims)
-                .signWith(SignatureAlgorithm.HS512, secret).compact();
+                .claims(claims)
+                .signWith(getSigningKey(), Jwts.SIG.HS512).compact();
         return token;
+    }
+
+    /**
+     * 从配置的秘钥派生签名密钥
+     */
+    private SecretKey getSigningKey()
+    {
+        try
+        {
+            MessageDigest digest = MessageDigest.getInstance("SHA-512");
+            return Keys.hmacShaKeyFor(digest.digest(secret.getBytes(StandardCharsets.UTF_8)));
+        }
+        catch (NoSuchAlgorithmException e)
+        {
+            throw new IllegalStateException("SHA-512 algorithm not available", e);
+        }
     }
 
     /**
@@ -193,9 +213,10 @@ public class TokenService
     private Claims parseToken(String token)
     {
         return Jwts.parser()
-                .setSigningKey(secret)
-                .parseClaimsJws(token)
-                .getBody();
+                .verifyWith(getSigningKey())
+                .build()
+                .parseSignedClaims(token)
+                .getPayload();
     }
 
     /**
